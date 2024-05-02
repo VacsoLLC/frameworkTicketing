@@ -1,0 +1,2 @@
+- Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
+- Email: new case created notification

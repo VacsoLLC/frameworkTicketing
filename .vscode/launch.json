@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+
+  "runtimeArgs": ["--preserve-symlinks"],
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}",
+      "trace": true,
+      "sourceMaps": true,
+      "perScriptSourcemaps": "yes",
+      "pathMapping": {
+        "/@fs/": ""
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Node",
+      "runtimeExecutable": "npm",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeArgs": ["run", "dev"],
+      "trace": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Vite",
+      "runtimeExecutable": "npm",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeArgs": ["run", "dev", "--preserve-symlinks"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Everything",
+      "configurations": ["Node", "Vite", "Chrome"]
+    }
+  ]
+}
