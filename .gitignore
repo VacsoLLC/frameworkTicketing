@@ -1,3 +1,5 @@
 .history
 *.sqlite
 node_modules
+.gitignore
+.env
