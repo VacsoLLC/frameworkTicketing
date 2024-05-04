@@ -1,5 +1,9 @@
 //import Table from "../../table.js";
 import { Table } from "frameworkbackend";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import Handlebars from "handlebars";
 
 export default class Ticket extends Table {
   constructor(args) {
@@ -213,24 +217,6 @@ export default class Ticket extends Table {
     });
 
     this.addAction({
-      label: "Close Ticket",
-      method: "closeTicket",
-      helpText: "Close this ticket.",
-      verify:
-        "Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.",
-      inputs: {
-        Comment: {
-          fieldType: "textArea",
-          required: true,
-        },
-        Minutes: {
-          fieldType: "number",
-          required: true,
-        },
-      },
-    });
-
-    this.addAction({
       label: "Public Update",
       method: "publicUpdate",
       verify: "The comment will be sent to the user.",
@@ -277,11 +263,99 @@ export default class Ticket extends Table {
       },
     });
 
+    this.addAction({
+      label: "Close Ticket",
+      method: "closeTicket",
+      helpText: "Close this ticket.",
+      verify:
+        "Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.",
+      inputs: {
+        Comment: {
+          fieldType: "textArea",
+          required: true,
+        },
+        Minutes: {
+          fieldType: "number",
+          required: true,
+        },
+      },
+    });
+
     this.addInit(() => {
       this.dbs.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
       });
+
+      this.dbs.core.event.on("comment", async (comment) => {
+        await this.emailComment(comment);
+      });
     });
+
+    this.addInit(async () => {
+      const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+      this.templates = {};
+
+      this.templates.subject = await this.compileTemplate(
+        //'src\\backend\\lib\\db\\databases\\core\\email\\templates\\subject.hbs'
+        path.join(__dirname, "ticket", "subject.hbs")
+      );
+      this.templates.body = await this.compileTemplate(
+        //'src\\backend\\lib\\db\\databases\\core\\email\\templates\\body.hbs'
+        path.join(__dirname, "ticket", "body.hbs")
+      );
+    });
+  }
+
+  async emailComment(args) {
+    console.log("comment", args);
+
+    if (args && args.type === "Private") {
+      // We dont want to send emails for private comments
+      return args;
+    }
+
+    if (args.author == "0") {
+      // We dont want to send emails for system comments
+      return args;
+    }
+
+    args.record = await this.dbs[args.db][args.table].getRecord({
+      where: { id: args.row },
+    });
+
+    const user = await this.dbs.core.user.getRecord({
+      recordId: args.record.requester,
+    });
+
+    if (!user) {
+      throw new Error("No user found! Can not send email");
+    }
+
+    const email = {};
+    email.body = this.templates.body(args);
+    email.subject = this.templates.subject(args);
+    email.to = user.email;
+    email.emailId = args.record.emailId;
+    email.emailConversationId = args.record.emailConversationId;
+
+    const results = await this.dbs.core.email.sendEmail({
+      email,
+      provider: args.record.emailProvider || this.config.email.defaultMailbox,
+    });
+
+    if (results && results.emailId && results.emailConversationId) {
+      await this.dbs[args.db][args.table].updateRecord({
+        recordId: args.recordId,
+        data: {
+          emailId: results.emailId,
+          emailConversationId: results.emailConversationId,
+        },
+        req,
+      });
+    }
+
+    return results;
   }
 
   async timeEntry({ recordId, Minutes, req }) {
@@ -393,44 +467,6 @@ export default class Ticket extends Table {
     await this.updateRecord({ recordId, data: { status }, req });
   }
 
-  async userCounts() {
-    return await this.knex("ticket")
-      .select(["assignedTo as id", "user.name as name"])
-      .count("ticket.id as tickets")
-      .leftJoin("user", "ticket.assignedTo", "user.id")
-      .groupBy("user.name", "assignedTo")
-      .orderBy("user.name", "asc");
-  }
-  async counts() {
-    const assignedTo = await this.knex("ticket")
-      .select(this.knex.raw("'User' as Parent"))
-      .select(this.knex.raw("'assignedTo' as columnName"))
-      .select(["assignedTo as id", "user.name as name"])
-      .count("ticket.id as tickets")
-      .leftJoin("user", "ticket.assignedTo", "user.id")
-      .groupBy("user.name", "assignedTo")
-      .orderBy("user.name", "asc");
-
-    const group = await this.knex("ticket")
-      .select(this.knex.raw("'Group' as Parent"))
-      .select(this.knex.raw("'groupAssignedTo' as columnName"))
-      .select(["group as id", "group.name as name"])
-      .count("ticket.id as tickets")
-      .leftJoin("group", "ticket.group", "group.id")
-      .groupBy("group.name", "group")
-      .orderBy("group.name", "asc");
-
-    const status = await this.knex("ticket")
-      .select(this.knex.raw("'Status' as Parent"))
-      .select(this.knex.raw("'status' as columnName"))
-      .select(["status as id", "status as name"])
-      .count("ticket.id as tickets")
-      .groupBy("status")
-      .orderBy("status", "asc");
-
-    return { status, assignedTo, group };
-  }
-
   async createFromEmail(message) {
     if (message.emailConversationId) {
       const record = await this.getRecord({
@@ -498,6 +534,15 @@ export default class Ticket extends Table {
         },
         action: "Ticket Create from Email",
       },
+    });
+  }
+
+  async compileTemplate(filePath) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, "utf8", (err, source) => {
+        if (err) reject(err);
+        else resolve(Handlebars.compile(source));
+      });
     });
   }
 }
