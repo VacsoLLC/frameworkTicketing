@@ -1,4 +1,4 @@
-# Vacso Framework
+# Vacso frameworkTicketing
 
 Welcome to the Vacso frameworkTicketing, an open-source ticketing system designed for enterprise IT departments.
 
