@@ -286,16 +286,18 @@ export default class Ticket extends Table {
         await this.createFromEmail(email);
       });
 
-      // example of how to listen to all events. Listern contains an event property that indicates what event was triggered
-      const listener = this.dbs.core.event.on("**", async (args) => {
-        console.log("event", listener, args);
-      });
-
       this.dbs.core.event.on(
         "core.comment.recordCreate.after",
         async ({ data, req }) => {
           console.log("recordCreate.after", data);
           await this.emailComment(data, req);
+        }
+      );
+
+      this.dbs.core.event.on(
+        "ticketing.ticket.recordCreate.after",
+        async (...args) => {
+          await this.emailNewTicket(...args);
         }
       );
     });
@@ -306,14 +308,78 @@ export default class Ticket extends Table {
       this.templates = {};
 
       this.templates.subject = await this.compileTemplate(
-        //'src\\backend\\lib\\db\\databases\\core\\email\\templates\\subject.hbs'
         path.join(__dirname, "ticket", "subject.hbs")
       );
-      this.templates.body = await this.compileTemplate(
-        //'src\\backend\\lib\\db\\databases\\core\\email\\templates\\body.hbs'
-        path.join(__dirname, "ticket", "body.hbs")
+      this.templates.newCommentBody = await this.compileTemplate(
+        path.join(__dirname, "ticket", "newCommentBody.hbs")
+      );
+      this.templates.newTicketBody = await this.compileTemplate(
+        path.join(__dirname, "ticket", "newTicketBody.hbs")
       );
     });
+  }
+
+  async sendEmailWithRecordUpdate({
+    recordId,
+    userId,
+    emailBody,
+    emailSubject,
+    provider = this.config.email.defaultMailbox,
+    emailId,
+    emailConversationId,
+    req,
+  }) {
+    const user = await this.dbs.core.user.recordGet({
+      recordId: userId,
+    });
+
+    if (!user) {
+      throw new Error("No user found! Can not send email");
+    }
+
+    const email = {
+      body: emailBody,
+      subject: emailSubject,
+      to: user.email,
+      emailId: emailId,
+      emailConversationId: emailConversationId,
+    };
+
+    const results = await this.dbs.core.email.sendEmail({
+      email,
+      provider: provider,
+    });
+
+    if (results && results.emailId && results.emailConversationId) {
+      await this.recordUpdate({
+        recordId,
+        data: {
+          emailId: results.emailId,
+          emailConversationId: results.emailConversationId,
+        },
+        req,
+      });
+    }
+
+    return results;
+  }
+
+  async emailNewTicket({ recordId, data, req }) {
+    // Only email things if it was created by a real user
+    if (req.user.id >= 1) {
+      console.log("emailNewTicket", data);
+
+      await this.sendEmailWithRecordUpdate({
+        recordId,
+        userId: data.requester,
+        emailBody: this.templates.newTicketBody({
+          record: data,
+          body: data.body,
+        }),
+        emailSubject: this.templates.subject({ record: data, body: data.body }),
+        req,
+      });
+    }
   }
 
   async emailComment(args, req) {
@@ -342,7 +408,7 @@ export default class Ticket extends Table {
     }
 
     const email = {};
-    email.body = this.templates.body(args);
+    email.body = this.templates.newCommentBody(args);
     email.subject = this.templates.subject(args);
     email.to = user.email;
     email.emailId = args.record.emailId;
