@@ -286,9 +286,18 @@ export default class Ticket extends Table {
         await this.createFromEmail(email);
       });
 
-      this.dbs.core.event.on("comment", async (comment) => {
-        await this.emailComment(comment);
+      // example of how to listen to all events. Listern contains an event property that indicates what event was triggered
+      const listener = this.dbs.core.event.on("**", async (args) => {
+        console.log("event", listener, args);
       });
+
+      this.dbs.core.event.on(
+        "core.comment.recordCreate.after",
+        async ({ data, req }) => {
+          console.log("recordCreate.after", data);
+          await this.emailComment(data, req);
+        }
+      );
     });
 
     this.addInit(async () => {
@@ -307,7 +316,7 @@ export default class Ticket extends Table {
     });
   }
 
-  async emailComment(args) {
+  async emailComment(args, req) {
     console.log("comment", args);
 
     if (args && args.type === "Private") {
@@ -320,11 +329,11 @@ export default class Ticket extends Table {
       return args;
     }
 
-    args.record = await this.dbs[args.db][args.table].getRecord({
+    args.record = await this.dbs[args.db][args.table].recordGet({
       where: { id: args.row },
     });
 
-    const user = await this.dbs.core.user.getRecord({
+    const user = await this.dbs.core.user.recordGet({
       recordId: args.record.requester,
     });
 
@@ -345,8 +354,8 @@ export default class Ticket extends Table {
     });
 
     if (results && results.emailId && results.emailConversationId) {
-      await this.dbs[args.db][args.table].updateRecord({
-        recordId: args.recordId,
+      await this.dbs[args.db][args.table].recordUpdate({
+        recordId: args.record.id,
         data: {
           emailId: results.emailId,
           emailConversationId: results.emailConversationId,
@@ -370,7 +379,7 @@ export default class Ticket extends Table {
   }
 
   async assignToMe({ recordId, req }) {
-    await this.updateRecord({
+    await this.recordUpdate({
       recordId,
       data: {
         assignedTo: req.user.id,
@@ -464,12 +473,12 @@ export default class Ticket extends Table {
       type,
     });
 
-    await this.updateRecord({ recordId, data: { status }, req });
+    await this.recordUpdate({ recordId, data: { status }, req });
   }
 
   async createFromEmail(message) {
     if (message.emailConversationId) {
-      const record = await this.getRecord({
+      const record = await this.recordGet({
         where: {
           emailConversationId: message.emailConversationId,
         },
@@ -491,7 +500,7 @@ export default class Ticket extends Table {
           type: "Public",
         });
 
-        this.updateRecord({
+        this.recordUpdate({
           recordId: record.id,
           data: {
             status: "Feedback Received",
@@ -516,7 +525,7 @@ export default class Ticket extends Table {
     //  throw new Error('User not found. Cannot create ticket from email.'); // TODO optionally create user or send reject email
     //}
 
-    await this.createRecord({
+    await this.recordCreate({
       data: {
         subject: message.subject,
         body: message.body,
