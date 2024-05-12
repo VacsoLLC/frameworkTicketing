@@ -1,6 +1,9 @@
 import Backend, { loadFromDir } from "@vacso/frameworkbackend";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const dbDir = path.join(currentDirectory, "src", "db");

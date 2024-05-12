@@ -1,7 +1,7 @@
 export default {
-  secret: 'mhr@cwy5gdt9KHU1arc',
+  secret: process.env.SECRET,
 
   options: {
-    expiresIn: '1h',
+    expiresIn: "1h",
   },
 };

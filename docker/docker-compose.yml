@@ -21,20 +21,24 @@ services:
       - ./config:/app/config
     command: sh -c "yarn install && yarn run indocker"
     environment:
-      - NODE_ENV=${NODE_ENV:-production}
+      NODE_ENV: ${NODE_ENV:-production}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      SECRET: ${SECRET}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     depends_on:
       - mariadb
   mariadb:
     image: mariadb:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: core
       MYSQL_USER: framework
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeme}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - '3306:3306'
     volumes:
       - ./mariadb-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
         
