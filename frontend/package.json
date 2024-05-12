@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@originjs/vite-plugin-commonjs": "^1.0.3",
-    "@vacso/frameworkfrontend": "^1.0.0",
+    "@vacso/frameworkfrontend": "^1.0.1",
     "chart.js": "^4.4.2",
     "interweave": "^13.1.0",
     "jwt-decode": "^4.0.0",
