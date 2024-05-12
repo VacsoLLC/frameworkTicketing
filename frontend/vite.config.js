@@ -7,9 +7,17 @@ export default defineConfig({
   resolve: {
     dedupe: ["react", "react-dom"],
   },
-  //optimizeDeps: {
-  //exclude: ["frameworkfrontend"],
-  //},
+  optimizeDeps: {
+    include: [
+      "react",
+      "prop-types",
+      "react-dom",
+      "zustand",
+      "interweave",
+      "react-router-dom",
+    ],
+  },
+
   server: {
     fs: {
       strict: false,

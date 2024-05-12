@@ -1,8 +1,6 @@
-import Backend, { loadFromDir } from "frameworkbackend";
+import Backend, { loadFromDir } from "@vacso/frameworkbackend";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-
-
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const dbDir = path.join(currentDirectory, "src", "db");

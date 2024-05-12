@@ -1,13 +1,13 @@
 export const sqlite = {
   core: {
-    client: 'sqlite3',
+    client: "sqlite3",
     connection: {
       filename: `./core.sqlite`,
     },
     useNullAsDefault: true,
   },
   ticketing: {
-    client: 'sqlite3',
+    client: "sqlite3",
     connection: {
       filename: `./core.sqlite`,
     },
@@ -17,12 +17,12 @@ export const sqlite = {
 
 export const mysql = {
   core: {
-    client: 'mysql2',
+    client: "mysql2",
     connection: {
-      host: 'localhost',
-      user: 'framework',
-      password: 'changeme',
-      database: 'core',
+      host: "mariadb",
+      user: "framework",
+      password: "changeme",
+      database: "core",
     },
   },
 };
@@ -30,12 +30,12 @@ export const mysql = {
 // Postgres is not yet supported by the framework
 export const pg = {
   core: {
-    client: 'pg',
+    client: "pg",
     connection: {
-      host: 'localhost',
-      user: 'framework',
-      password: 'changeme',
-      database: 'core',
+      host: "localhost",
+      user: "framework",
+      password: "changeme",
+      database: "core",
     },
   },
 };

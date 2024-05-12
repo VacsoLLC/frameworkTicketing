@@ -1,0 +1,40 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../frontend/dist:/www
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    depends_on:
+      - nodeapp
+  nodeapp:
+    image: node:18
+    restart: always
+    working_dir: /app
+    volumes:
+      - ../backend:/app
+      - ./backend/node_modules:/app/node_modules
+      - ./config:/app/config
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
+      MYSQL_DATABASE: core
+      MYSQL_USER: framework
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeme}
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mariadb-data:/var/lib/mysql
+
+        

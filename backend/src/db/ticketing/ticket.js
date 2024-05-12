@@ -1,5 +1,5 @@
 //import Table from "../../table.js";
-import { Table } from "frameworkbackend";
+import { Table } from "@vacso/frameworkbackend";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
@@ -51,7 +51,7 @@ export default class Ticket extends Table {
     this.addColumn({
       columnName: "body",
       friendlyName: "Body",
-      columnType: "string",
+      columnType: "text",
       index: true,
       helpText: "Body of the ticket",
       fieldType: "html", //'textArea',
@@ -319,7 +319,7 @@ export default class Ticket extends Table {
     });
   }
 
-  async sendEmailWithRecordUpdate({
+  async sendEmail({
     recordId,
     userId,
     emailBody,
@@ -334,7 +334,15 @@ export default class Ticket extends Table {
     });
 
     if (!user) {
+      //req.warnings.push("No user found! Can not send email");
+      //return;
       throw new Error("No user found! Can not send email");
+    }
+
+    if (!user.email || !user.email.match(/@/)) {
+      //req.warnings.push("No valid email found for user! Can not send email");
+      //return;
+      throw new Error("No valid email found for user! Can not send email");
     }
 
     const email = {
@@ -369,16 +377,26 @@ export default class Ticket extends Table {
     if (req.user.id >= 1) {
       console.log("emailNewTicket", data);
 
-      await this.sendEmailWithRecordUpdate({
-        recordId,
-        userId: data.requester,
-        emailBody: this.templates.newTicketBody({
-          record: data,
-          body: data.body,
-        }),
-        emailSubject: this.templates.subject({ record: data, body: data.body }),
-        req,
-      });
+      try {
+        await this.sendEmail({
+          recordId,
+          userId: data.requester,
+          emailBody: this.templates.newTicketBody({
+            record: data,
+            body: data.body,
+          }),
+          emailSubject: this.templates.subject({
+            record: data,
+            body: data.body,
+          }),
+          req,
+        });
+      } catch (error) {
+        req.message({
+          detail: `Error sending email: ${error.message}`,
+          severity: "warn",
+        });
+      }
     }
   }
 
@@ -399,38 +417,22 @@ export default class Ticket extends Table {
       where: { id: args.row },
     });
 
-    const user = await this.dbs.core.user.recordGet({
-      recordId: args.record.requester,
-    });
-
-    if (!user) {
-      throw new Error("No user found! Can not send email");
-    }
-
-    const email = {};
-    email.body = this.templates.newCommentBody(args);
-    email.subject = this.templates.subject(args);
-    email.to = user.email;
-    email.emailId = args.record.emailId;
-    email.emailConversationId = args.record.emailConversationId;
-
-    const results = await this.dbs.core.email.sendEmail({
-      email,
-      provider: args.record.emailProvider || this.config.email.defaultMailbox,
-    });
-
-    if (results && results.emailId && results.emailConversationId) {
-      await this.dbs[args.db][args.table].recordUpdate({
-        recordId: args.record.id,
-        data: {
-          emailId: results.emailId,
-          emailConversationId: results.emailConversationId,
-        },
+    try {
+      await this.sendEmail({
+        recordId: args.row,
+        userId: args.record.requester,
+        emailBody: this.templates.newCommentBody(args),
+        emailSubject: this.templates.subject(args),
         req,
+      });
+    } catch (error) {
+      req.message({
+        detail: `Error sending email: ${error.message}`,
+        severity: "warn",
       });
     }
 
-    return results;
+    return;
   }
 
   async timeEntry({ recordId, Minutes, req }) {
@@ -587,9 +589,6 @@ export default class Ticket extends Table {
     const user = await this.dbs.core.user.getUserOrCreate(message.from);
 
     // TODO build an config option to create user if not found, create ticket with no requester, or reject email
-    //if (!user) {
-    //  throw new Error('User not found. Cannot create ticket from email.'); // TODO optionally create user or send reject email
-    //}
 
     await this.recordCreate({
       data: {
