@@ -1,6 +1,6 @@
 # Vacso frameworkTicketing
 
-Welcome to the Vacso frameworkTicketing, an open-source ticketing system designed for enterprise IT departments.
+Welcome to Vacso frameworkTicketing, an open-source ticketing system designed for enterprise IT departments.
 
 frameworkTicketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
 
