@@ -25,6 +25,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       SECRET: ${SECRET}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      MYSQL_HOST: mariadb
     depends_on:
       - mariadb
   mariadb:
