@@ -12,4 +12,5 @@ echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
 echo "SECRET=$SECRET" >> .env
 echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> .env
 
+
 echo ".env file has been created with random passwords."

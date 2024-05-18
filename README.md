@@ -23,16 +23,44 @@ To begin using the Vacso Framework for your project, follow these steps:
    git clone https://github.com/vacsollc/frameworkTicketing.git
    ```
 
-2. **Install Dependencies**: Navigate to the cloned directory and install the necessary dependencies.
+2. **Install Dependencies**: Navigate to the cloned directory and install the necessary dependencies for the frontend and backend
 
    ```bash
    cd frameworkTicketing
+   cd backend
    yarn install
+   cd ..
+   cd backend
+   yarn install
+   cd ..
    ```
 
-3. **Modify the config**: End the config files in backend/config
+3. **Generate enivorment variables**: Creates random passwords and secrets for operation.
 
-4. **Run the app**: TBD
+```bash
+cd docker
+./generate_env.sh
+more .env
+cd ..
+```
+
+```cmd
+cd docker
+powershell ./generate_env.ps1
+more .env
+cd ..
+```
+
+4. **Modify the config**: check out the files in /backend/config and update as nessary.
+
+5. **Run the app**:
+
+```bash
+cd docker
+docker compose up
+```
+
+6. **Login to the app**: Go to http://your server/. You can find the random password for admin in the .env file.
 
 ## Documentation
 
@@ -51,3 +79,7 @@ Vacso Framework is licensed under the [MIT License](LICENSE).
 ---
 
 Vacso frameworkTicketing is a proud project by Vacso, LLC. We are committed to providing developers with tools that make building enterprise applications more efficient and enjoyable. Happy coding! 🚀
+
+```
+
+```
