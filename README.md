@@ -27,7 +27,7 @@ To begin using the Vacso Framework for your project, follow these steps:
 
    ```bash
    cd frameworkTicketing
-   npm install
+   yarn install
    ```
 
 3. **Modify the config**: End the config files in backend/config
