@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config(); // This line is necessary to load the .env file where your environment variables are defined.
 
 export default {
+  /*
   defaultMailbox: "Google",
   mailboxes: [
     {
@@ -41,4 +42,5 @@ export default {
       checkInterval: 60 * 1000, // 1 minute
     },
   ],
+  */
 };
