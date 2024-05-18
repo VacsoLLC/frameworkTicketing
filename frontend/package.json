@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -12,6 +12,7 @@
   "dependencies": {
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@vacso/frameworkfrontend": "^1.0.1",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
     "chart.js": "^4.4.2",
     "interweave": "^13.1.0",
     "jwt-decode": "^4.0.0",

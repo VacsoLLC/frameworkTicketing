@@ -7,7 +7,7 @@ import Handlebars from "handlebars";
 
 export default class Ticket extends Table {
   constructor(args) {
-    super({ name: "Ticket", table: "ticket", ...args });
+    super({ name: "Ticket", className: "ticket", ...args });
 
     this.addColumn({
       columnName: "created",
@@ -282,11 +282,11 @@ export default class Ticket extends Table {
     });
 
     this.addInit(() => {
-      this.dbs.core.event.on("email", async (email) => {
+      this.packages.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
       });
 
-      this.dbs.core.event.on(
+      this.packages.core.event.on(
         "core.comment.recordCreate.after",
         async ({ data, req }) => {
           console.log("recordCreate.after", data);
@@ -294,7 +294,7 @@ export default class Ticket extends Table {
         }
       );
 
-      this.dbs.core.event.on(
+      this.packages.core.event.on(
         "ticketing.ticket.recordCreate.after",
         async (...args) => {
           await this.emailNewTicket(...args);
@@ -329,7 +329,7 @@ export default class Ticket extends Table {
     emailConversationId,
     req,
   }) {
-    const user = await this.dbs.core.user.recordGet({
+    const user = await this.packages.core.user.recordGet({
       recordId: userId,
     });
 
@@ -353,7 +353,7 @@ export default class Ticket extends Table {
       emailConversationId: emailConversationId,
     };
 
-    const results = await this.dbs.core.email.sendEmail({
+    const results = await this.packages.core.email.sendEmail({
       email,
       provider: provider,
     });
@@ -413,7 +413,7 @@ export default class Ticket extends Table {
       return args;
     }
 
-    args.record = await this.dbs[args.db][args.table].recordGet({
+    args.record = await this.packages[args.db][args.table].recordGet({
       where: { id: args.row },
     });
 
@@ -436,7 +436,7 @@ export default class Ticket extends Table {
   }
 
   async timeEntry({ recordId, Minutes, req }) {
-    await this.dbs.core.time.createEntry({
+    await this.packages.core.time.createEntry({
       req,
       db: this.db,
       table: this.table,
@@ -458,7 +458,7 @@ export default class Ticket extends Table {
   }
 
   async publicUpdate({ recordId, Comment, Minutes, req }) {
-    await this.dbs.core.comment.createComment({
+    await this.packages.core.comment.createComment({
       req,
       db: this.db,
       table: this.table,
@@ -475,7 +475,7 @@ export default class Ticket extends Table {
   }
 
   async privateUpdate({ recordId, Comment, Minutes, req }) {
-    await this.dbs.core.comment.createComment({
+    await this.packages.core.comment.createComment({
       req,
       db: this.db,
       table: this.table,
@@ -532,7 +532,7 @@ export default class Ticket extends Table {
       throw new Error("Comment is required.");
     }
 
-    await this.dbs.core.comment.createComment({
+    await this.packages.core.comment.createComment({
       req,
       db: this.db,
       table: this.table,
@@ -554,7 +554,7 @@ export default class Ticket extends Table {
 
       if (record) {
         console.log("Found existing ticket, adding comment.", record);
-        this.dbs.core.comment.createComment({
+        this.packages.core.comment.createComment({
           req: {
             user: {
               id: "0",
@@ -586,7 +586,7 @@ export default class Ticket extends Table {
       }
     }
 
-    const user = await this.dbs.core.user.getUserOrCreate(message.from);
+    const user = await this.packages.core.user.getUserOrCreate(message.from);
 
     // TODO build an config option to create user if not found, create ticket with no requester, or reject email
 
