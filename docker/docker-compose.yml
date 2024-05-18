@@ -17,9 +17,11 @@ services:
     working_dir: /app
     volumes:
       - ../backend:/app
+      - ../frontend:/frontend
       - ./backend/node_modules:/app/node_modules
+      - ./frontend/node_modules:/frontend/node_modules
       - ./config:/app/config
-    command: sh -c "yarn install && yarn run indocker"
+    command: sh -c "cd /frontend && yarn install && yarn run build && cd /app && yarn install && yarn run indocker"
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
