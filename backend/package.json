@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --inspect ./index.mjs",
+    "dev": "set DEBUG=express:* & node --inspect ./index.mjs",
     "dev-no-nodemon": "node --inspect ./index.mjs",
     "indocker": "node ./index.mjs"
   },
