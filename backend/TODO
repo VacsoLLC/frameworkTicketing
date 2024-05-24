@@ -1,2 +1,8 @@
-- create requester while creating a ticket
+
+- onbound email ticket generation confirmation response
+
+- create requester while creating a ticket (+ sign popup record create)
+
 - Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
+
+- figure out acme ssl certs

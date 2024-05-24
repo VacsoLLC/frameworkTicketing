@@ -4,3 +4,4 @@ node_modules
 .gitignore
 .env
 docker/data
+docker/backup

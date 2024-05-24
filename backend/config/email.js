@@ -3,13 +3,12 @@ import dotenv from "dotenv";
 dotenv.config(); // This line is necessary to load the .env file where your environment variables are defined.
 
 export default {
-  /*
   defaultMailbox: "Google",
   mailboxes: [
     {
       type: "Microsoft",
       name: "Microsoft",
-      email: "tripp@hivemindlegal.com",
+      email: process.env.MICROSOFT_EMAIL_ADDRESS,
       assignmentGroup: 1, // Sales // TODO change this to names and look up the ID
       auth: {
         clientId: process.env.MICROSOFT_CLIENT_ID, // Loaded from environment
@@ -21,7 +20,7 @@ export default {
     {
       type: "Google",
       name: "Google",
-      email: "support@wasteoftime.org",
+      email: process.env.GOOGLE_EMAIL_ADDRESS,
       assignmentGroup: 4, // IT Helpdesk
       auth: {
         type: "service_account",
@@ -42,5 +41,4 @@ export default {
       checkInterval: 60 * 1000, // 1 minute
     },
   ],
-  */
 };
