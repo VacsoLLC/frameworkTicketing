@@ -9,7 +9,7 @@ export default class Ticket extends Table {
   constructor(args) {
     super({ name: "Ticket", className: "ticket", ...args });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "created",
       friendlyName: "Created",
       columnType: "datetime",
@@ -20,7 +20,7 @@ export default class Ticket extends Table {
       },
     });
 
-    this.addManyToOne({
+    this.manyToOneAdd({
       referencedTableName: "user",
       referencedDb: "core",
       columnName: "requester",
@@ -40,7 +40,7 @@ export default class Ticket extends Table {
       index: true,
     });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "subject",
       friendlyName: "Subject",
       columnType: "string",
@@ -48,7 +48,7 @@ export default class Ticket extends Table {
       helpText: "Subject or Title of the ticket",
     });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "body",
       friendlyName: "Body",
       columnType: "text",
@@ -57,7 +57,7 @@ export default class Ticket extends Table {
       fieldType: "html", //'textArea',
     });
 
-    this.addManyToOne({
+    this.manyToOneAdd({
       referencedTableName: "group",
       referencedDb: "core",
       columnName: "group",
@@ -74,7 +74,7 @@ export default class Ticket extends Table {
     });
 
     // Example usage with custom column name and displayColumns (though displayColumns isn't directly utilized in schema creation)
-    this.addManyToOne({
+    this.manyToOneAdd({
       referencedTableName: "user",
       referencedDb: "core",
       columnName: "assignedTo",
@@ -94,7 +94,7 @@ export default class Ticket extends Table {
       index: true,
     });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "status",
       friendlyName: "Status",
       //columnType: 'string',
@@ -105,9 +105,9 @@ export default class Ticket extends Table {
       options: ["Open", "Closed", "Pending Feedback", "Feedback Received"],
     });
 
-    // TODO: document this use case... comment is a generic table that can be reused... addManyToOne should be used when ever possible, and it automatically calls add child
+    // TODO: document this use case... comment is a generic table that can be reused... manyToOneAdd should be used when ever possible, and it automatically calls add child
     // TODO: build a better fucntion for this...
-    this.addChild({
+    this.childAdd({
       db: "core", // db name we want to make a child
       table: "comment", // table name we want to make a child
       columnmap: {
@@ -119,7 +119,7 @@ export default class Ticket extends Table {
       tabName: "Comments",
     });
 
-    this.addChild({
+    this.childAdd({
       db: "core", // db name we want to make a child
       table: "time", // table name we want to make a child
       columnmap: {
@@ -131,7 +131,7 @@ export default class Ticket extends Table {
       tabName: "Time",
     });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "emailConversationId",
       friendlyName: "Email Conversation Id",
       columnType: "string",
@@ -140,7 +140,7 @@ export default class Ticket extends Table {
       helpText: "Used to map incoming emails to tickets.",
     });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "emailId",
       friendlyName: "Email ID",
       columnType: "string",
@@ -149,7 +149,7 @@ export default class Ticket extends Table {
       helpText: "ID of last email receieved. Used to send replies.",
     });
 
-    this.addColumn({
+    this.columnAdd({
       columnName: "emailProvider",
       friendlyName: "Email Provider",
       columnType: "string",
@@ -191,14 +191,14 @@ export default class Ticket extends Table {
       order: 2,
     });
 
-    this.addAction({
+    this.actionAdd({
       label: "Assign to Me",
       method: "assignToMe",
       verify: "Assign this ticket to yourself?",
       helpText: "Assign this ticket to yourself.",
     });
 
-    this.addAction({
+    this.actionAdd({
       label: "Request Feedback",
       method: "requestFeedback",
       helpText: "Request feedback from the user.",
@@ -216,7 +216,7 @@ export default class Ticket extends Table {
       },
     });
 
-    this.addAction({
+    this.actionAdd({
       label: "Public Update",
       method: "publicUpdate",
       verify: "The comment will be sent to the user.",
@@ -233,7 +233,7 @@ export default class Ticket extends Table {
       },
     });
 
-    this.addAction({
+    this.actionAdd({
       label: "Private Update",
       method: "privateUpdate",
       verify: "The comment will not be sent to the user.",
@@ -250,7 +250,7 @@ export default class Ticket extends Table {
       },
     });
 
-    this.addAction({
+    this.actionAdd({
       label: "Time Entry",
       method: "timeEntry",
       verify: "Add a time entry to this ticket? Time is entered in minutes.",
@@ -263,7 +263,7 @@ export default class Ticket extends Table {
       },
     });
 
-    this.addAction({
+    this.actionAdd({
       label: "Close Ticket",
       method: "closeTicket",
       helpText: "Close this ticket.",
@@ -281,7 +281,7 @@ export default class Ticket extends Table {
       },
     });
 
-    this.addInit(() => {
+    this.initAdd(() => {
       this.packages.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
       });
@@ -302,7 +302,7 @@ export default class Ticket extends Table {
       );
     });
 
-    this.addInit(async () => {
+    this.initAdd(async () => {
       const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
       this.templates = {};
