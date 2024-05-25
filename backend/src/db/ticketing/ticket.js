@@ -373,31 +373,30 @@ export default class Ticket extends Table {
   }
 
   async emailNewTicket({ recordId, data, req }) {
-    // Only email things if it was created by a real user
-    if (req.user.id >= 1) {
-      console.log("emailNewTicket", data);
+    //// Only email things if it was created by a real user
+    //if (req.user.id >= 1) {
 
-      try {
-        await this.sendEmail({
-          recordId,
-          userId: data.requester,
-          emailBody: this.templates.newTicketBody({
-            record: data,
-            body: data.body,
-          }),
-          emailSubject: this.templates.subject({
-            record: data,
-            body: data.body,
-          }),
-          req,
-        });
-      } catch (error) {
-        req.message({
-          detail: `Error sending email: ${error.message}`,
-          severity: "warn",
-        });
-      }
+    try {
+      await this.sendEmail({
+        recordId,
+        userId: data.requester,
+        emailBody: this.templates.newTicketBody({
+          record: data,
+          body: data.body,
+        }),
+        emailSubject: this.templates.subject({
+          record: data,
+          body: data.body,
+        }),
+        req,
+      });
+    } catch (error) {
+      req.message({
+        detail: `Error sending email: ${error.message}`,
+        severity: "warn",
+      });
     }
+    //}
   }
 
   async emailComment(args, req) {
