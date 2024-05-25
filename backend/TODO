@@ -1,5 +1,3 @@
-- onbound email ticket generation confirmation response
-
 - related record search popup window
 
 - Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
