@@ -1,9 +1,7 @@
-- move record and anything using api.fetch to useBackend
-
 - onbound email ticket generation confirmation response
 
-- create requester while creating a ticket (+ sign popup record create)
+- related record search popup window
 
 - Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
 
-- figure out acme ssl certs
+- Docker Container: Implement automated lets encrypt ssl certs
