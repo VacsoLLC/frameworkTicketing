@@ -23,6 +23,8 @@ export default class Ticket extends Table {
     this.manyToOneAdd({
       referencedTableName: "user",
       referencedDb: "core",
+      referenceCreate: true,
+
       columnName: "requester",
       helpText: "User who requested the ticket",
       displayColumns: [
@@ -77,6 +79,7 @@ export default class Ticket extends Table {
     this.manyToOneAdd({
       referencedTableName: "user",
       referencedDb: "core",
+      queryModifier: "ticketing.ticket.resolver",
       columnName: "assignedTo",
       helpText: "User the ticket is assigned to",
       displayColumns: [
@@ -281,7 +284,15 @@ export default class Ticket extends Table {
       },
     });
 
-    this.initAdd(() => {
+    // Special role for who can be assigned a ticket
+    this.addRecord({
+      packageName: "core",
+      className: "role",
+      name: "Resolver",
+      desc: "Can be assigned tickets. Must not be assigned to groups. Always assign directly to users.",
+    });
+
+    this.initAdd(async () => {
       this.packages.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
       });
@@ -300,9 +311,24 @@ export default class Ticket extends Table {
           await this.emailNewTicket(...args);
         }
       );
-    });
 
-    this.initAdd(async () => {
+      // Register a fancy query modifier for the user table
+      this.packages.core.user.queryModifierAdd(
+        "ticketing.ticket.resolver",
+        (query, knex) => {
+          return query.whereIn(
+            "id",
+            knex
+              .select("id2")
+              .from("user_role")
+              .where(
+                "id1",
+                knex.select("id").from("role").where("name", "Resolver")
+              )
+          );
+        }
+      );
+
       const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
       this.templates = {};

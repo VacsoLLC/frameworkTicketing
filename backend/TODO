@@ -1,4 +1,14 @@
+- resolver role
+
+- Allow requesters to
+-- login at all (via admin create local account or saml)
+-- register for an account
+
 - related record search popup window
+
+- make related fields more efficent
+-- only pull table once if referenced by multiple fields
+-- add where clause to only pull relevent users
 
 - Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
 
