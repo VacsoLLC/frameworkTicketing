@@ -128,6 +128,8 @@ Support. Instructions coming soon.
 
 Vacso frameworkTicketing is an open-source project, and we welcome contributions from the community. If you're interested in contributing, please read our [contributing guidelines](#) for more information.
 
+To develop you'll need to checkout frameworkBackend, frameworkFrontend, and frameworkTicketing into the same folder (IE /devel/frameworkTicketing, /devel/frameworkBackend, /devel/frameworkFrontend). Then use "Open workspace from file" to open frameworkTicketing/framework.code-workspace. You'll need to run "yarn install" and "yarn link" in backend and frontend. In ticketing, run "yarn install", "yarn link @vacso/frameworkFrontend", "yarn link @vacso/frameworkBackend".
+
 ## Support
 
 If you encounter any issues or have questions regarding the Vacso Framework, please file an issue on our [GitHub repository](https://github.com/vacsollc/framework/issues).
