@@ -414,6 +414,7 @@ export default class Ticket extends Table {
           record: data,
           body: data.body,
         }),
+        provider: data.emailProvider,
         req,
       });
     } catch (error) {
@@ -448,6 +449,7 @@ export default class Ticket extends Table {
         userId: args.record.requester,
         emailBody: this.templates.newCommentBody(args),
         emailSubject: this.templates.subject(args),
+        provider: args.record.emailProvider,
         req,
       });
     } catch (error) {
@@ -582,7 +584,7 @@ export default class Ticket extends Table {
         this.packages.core.comment.createComment({
           req: {
             user: {
-              id: "0",
+              id: 1,
             },
             action: "Ticket Note from Email",
           },
@@ -601,7 +603,7 @@ export default class Ticket extends Table {
           },
           req: {
             user: {
-              id: "0",
+              id: "1",
             },
             action: "Ticket Note from Email",
           },
@@ -629,7 +631,7 @@ export default class Ticket extends Table {
       // TODO: need a better way of calling table functions from a/as a system user
       req: {
         user: {
-          id: "0",
+          id: "1",
         },
         action: "Ticket Create from Email",
       },
