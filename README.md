@@ -19,26 +19,24 @@ frameworkTicketing is alpha level code. It is under active development and shoul
 
 To begin using the Vacso frameworkTicketing, follow these steps:
 
+#### Install prereqs
+
+This was tested on a fresh install of Ubuntu 24. You can use any up to date linux with slightly modified commands.
+
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get -y install git
+```
+
+Follow the instructions here to install docker: https://docs.docker.com/engine/install/ubuntu/
+
 #### Clone the Repsitory
 
 Start by cloning the Vacso Framework repository to your local machine.
 
 ```bash
 git clone https://github.com/vacsollc/frameworkTicketing.git
-```
-
-#### Install Dependencies
-
-Navigate to the cloned directory and install the necessary dependencies for the frontend and backend
-
-```bash
-cd frameworkTicketing
-cd backend
-yarn install
-cd ..
-cd backend
-yarn install
-cd ..
 ```
 
 #### Generate enivorment variables
@@ -48,8 +46,8 @@ Creates random passwords and secrets for operation.
 Unix
 
 ```bash
-cd docker
-./generate_env.sh
+cd backend
+bash ./generate_env.sh
 more .env
 cd ..
 ```
@@ -71,7 +69,7 @@ check out the files in /backend/config and update as nessary.
 
 ```bash
 cd docker
-docker compose up
+podman-compose up
 ```
 
 #### Login to the app
