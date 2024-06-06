@@ -44,6 +44,7 @@ services:
         compress: "true"
   ofelia:
     image: mcuadros/ofelia:latest
+    restart: always
     depends_on:
       - mariadb
     command: daemon --docker
