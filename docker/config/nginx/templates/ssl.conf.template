@@ -1,0 +1,10 @@
+# Do not edit ssl.conf. Edit ssl.conf.template in the templates folder.
+
+server {
+    listen              443 ssl;
+    server_name         ${DOMAIN_NAME};
+    ssl_certificate     /certs/${DOMAIN_NAME}/fullchain.pem;
+    ssl_certificate_key /certs/${DOMAIN_NAME}/privkey.pem;
+
+    include ./conf.d/reactandapi.conf.include;
+}
