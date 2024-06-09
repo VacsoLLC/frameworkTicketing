@@ -292,6 +292,38 @@ export default class Ticket extends Table {
       desc: "Can be assigned tickets. Must not be assigned to groups. Always assign directly to users.",
     });
 
+    this.addRecord({
+      packageName: "core",
+      className: "group",
+      name: "Helpdesk",
+    });
+
+    this.addRecord({
+      packageName: "core",
+      className: "user",
+      name: "Bob Resolver",
+      password: process.env.ADMIN_PASSWORD || "fdr*vjy!jrn4DKD4qxe",
+      email: "resolver@vacso.com",
+    });
+
+    this.addRecord({
+      packageName: "core",
+      className: "user_group",
+      id1: 1,
+      id2: 3,
+    });
+
+    this.addRecord({
+      packageName: "core",
+      className: "user_role",
+      id1: 3,
+      id2: 3,
+    });
+
+    
+
+
+
     this.initAdd(async () => {
       this.packages.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
