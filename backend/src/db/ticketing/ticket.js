@@ -466,7 +466,7 @@ export default class Ticket extends Table {
       return args;
     }
 
-    if (args.author == "0") {
+    if (args.author == "1") {
       // We dont want to send emails for system comments
       return args;
     }
