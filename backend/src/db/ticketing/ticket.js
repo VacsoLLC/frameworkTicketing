@@ -320,10 +320,6 @@ export default class Ticket extends Table {
       id2: 3,
     });
 
-    
-
-
-
     this.initAdd(async () => {
       this.packages.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
@@ -403,6 +399,10 @@ export default class Ticket extends Table {
       throw new Error("No valid email found for user! Can not send email");
     }
 
+    if (process.env.DEMO_MODE == "true") {
+      throw new Error("Outbound emails are disabled in demo mode.");
+    }
+
     const email = {
       body: emailBody,
       subject: emailSubject,
@@ -431,9 +431,6 @@ export default class Ticket extends Table {
   }
 
   async emailNewTicket({ recordId, data, req }) {
-    //// Only email things if it was created by a real user
-    //if (req.user.id >= 1) {
-
     try {
       await this.sendEmail({
         recordId,
