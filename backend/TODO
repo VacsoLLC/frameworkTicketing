@@ -1,15 +1,20 @@
-- resolver role
+- Add switch to allow creating users by non admins
+
+
 
 - Allow requesters to
 -- login at all (via admin create local account or saml)
+-- see thier tickets
 -- register for an account
 
 - related record search popup window
 
 - make related fields more efficent
 -- only pull table once if referenced by multiple fields
--- add where clause to only pull relevent users
 
 - Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
 
-- Docker Container: Implement automated lets encrypt ssl certs
+
+- Documentation
+-- Google SAML
+-- Google Email

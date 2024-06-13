@@ -1,10 +1,26 @@
 export default {
-  domain: 'home.wasteoftime.org:5173', // Domain name (and port, if not default) of the backend server that will handle responses from the IdP
+  domain: "home.wasteoftime.org:5173", // Domain name (and port, if not default) of the backend server that will handle responses from the IdP
   idps: {
     ms: {
-      name: 'Microsoft',
-      entity: 'ticket',
+      name: "Microsoft",
+      entity: "ticketing", //'ticket',
       certificates: [
+        `-----BEGIN CERTIFICATE-----
+MIIC8DCCAdigAwIBAgIQb5LUOHEJ5YJACgs+gl847TANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQD
+EylNaWNyb3NvZnQgQXp1cmUgRmVkZXJhdGVkIFNTTyBDZXJ0aWZpY2F0ZTAeFw0yNDA2MTMwMDU4
+NTJaFw0yNzA2MTMwMDU4NTJaMDQxMjAwBgNVBAMTKU1pY3Jvc29mdCBBenVyZSBGZWRlcmF0ZWQg
+U1NPIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwryClf0vJbgk
+FArZvtAZgSScT6bBhn++I/zv0ITMSNpV3I7vdQf4oskwSdQZavl7TUBT4P7BygvHaoduiwrxt1ef
+0whLQnG4xalf00m58z4Y6VlIueHWvvMJ1jdkHAkd8wgM1SwmgdN1TUxUu9F1aRpqjLFuZX2siGGO
+NPAdX3H8awqWRTTwE8PBEFZ47m8py8DbcTR8YvEpUTa5T9vTWuE6b1zpaOiipdDXbWmWr4gLxNaQ
+FquZXMI2OIUsa3WMcxLEopU5DPqsSlkWGQqD2PWXZz8jC452BZecU7nl40R8zcVLN2PKCFWMJF77
+uUhHZZJBAWmekbNN59ADh5gTJQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBEBIUjoIAKVwvFuY+4
+iDg1nAlURp4HIhoHgMKojVKyOWVAH1rxxKqMDx8+tdUGE8mxCGg9mYMgmekyy7GFpO05JPv4vlas
+2kcn2LGdnBOz/ifiTXByeQVJjmYOijtDepGQnfNMifYkWCN1ZTWm3xHkfLdJHpEDd7J/WCNz0whX
+CE5LIlb8n0vQBE/N9a7HoDpywve9m81IyiNE7l+rqFiGDC03frfLi84wHZD5gB9X5xSKNDXZ1phI
+DDZ9lFCYlNnpBx2xBz6ZnYUGcSknnvsuAlByTLBiV6pECzuVPmQ6891QLejD7SHfzz2Q1Hk0f9jx
+6m+MtvoGrNzxIZx/FR0k
+-----END CERTIFICATE-----` /*
         `-----BEGIN CERTIFICATE-----
 MIIC8DCCAdigAwIBAgIQax/k/PZ7ep5M4ZvGJ6CJezANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQD
 EylNaWNyb3NvZnQgQXp1cmUgRmVkZXJhdGVkIFNTTyBDZXJ0aWZpY2F0ZTAeFw0yNDAxMTUwMzU2
@@ -20,14 +36,15 @@ MMgdoZAAidAeUhqtTRZopHMocB8Kd9r52MDi4P2eVRp6wTPN2dN+Q7cxQ/qWVWgtxcuA0HvNHrQU
 Lsl20n5DUqdtxrWBUV06h1ekJKeO8CP8J3NjGO5P28S0a2mJHncZrlxGUObpgxe8Gzy7nabe49S6
 XrQ5fEvEstZTkP4TtpiGo+eDNsj2mySwynP3TV7bUhKRMlGyL64tLWm7eMVkbdQxFw90xnjKPQxC
 m9dbUvggDG31XwAfvBu6
------END CERTIFICATE-----`,
+-----END CERTIFICATE-----`,*/,
       ],
       loginUrl:
-        'https://login.microsoftonline.com/d06b8e26-3e31-4c16-a3d9-fadcd565ed94/saml2',
+        //'https://login.microsoftonline.com/d06b8e26-3e31-4c16-a3d9-fadcd565ed94/saml2',
+        "https://login.microsoftonline.com/b40b2daa-7d21-4662-b299-5a11df35b700/saml2",
     },
     google: {
-      name: 'Google',
-      entity: 'ticket',
+      name: "Google",
+      entity: "ticket",
       certificates: [
         `-----BEGIN CERTIFICATE-----
 MIIDdDCCAlygAwIBAgIGAY0VfIlpMA0GCSqGSIb3DQEBCwUAMHsxFDASBgNVBAoTC0dvb2dsZSBJ
@@ -48,7 +65,7 @@ pJwMkcJjh8b7C+B0ZoMUqMniD+F4Ed5YcbPdju8fGJbXBHwgBKJY8OnJJ2XVzQAHWBb0W/akE6Yv
 3Fk5c423/CLN68+Ftxb0KyfowlgnM2sae9A/f5CxNrGq
 -----END CERTIFICATE-----`,
       ],
-      loginUrl: 'https://accounts.google.com/o/saml2/idp?idpid=C042baka3',
+      loginUrl: "https://accounts.google.com/o/saml2/idp?idpid=C042baka3",
     },
   },
 };
