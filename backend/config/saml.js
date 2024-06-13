@@ -1,5 +1,5 @@
 export default {
-  domain: "home.wasteoftime.org:5173", // Domain name (and port, if not default) of the backend server that will handle responses from the IdP
+  domain: "demo.vacso.com", // Domain name (and port, if not default) of the backend server that will handle responses from the IdP
   idps: {
     ms: {
       name: "Microsoft",
