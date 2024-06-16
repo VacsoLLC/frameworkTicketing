@@ -31,7 +31,6 @@ export default class Ticket extends Table {
         {
           columnName: "name",
           friendlyName: "Requester",
-          listStyle: "nowrap",
         },
       ],
 
@@ -56,7 +55,7 @@ export default class Ticket extends Table {
       columnType: "text",
       index: true,
       helpText: "Body of the ticket",
-      fieldType: "html", //'textArea',
+      
     });
 
     this.manyToOneAdd({
@@ -68,7 +67,6 @@ export default class Ticket extends Table {
         {
           columnName: "name",
           friendlyName: "Group",
-          listStyle: "nowrap",
         },
       ],
       tabName: "Tickets Assigned",
@@ -86,7 +84,6 @@ export default class Ticket extends Table {
         {
           columnName: "name",
           friendlyName: "Assigned To",
-          listStyle: "nowrap",
         },
       ],
 
@@ -304,6 +301,7 @@ export default class Ticket extends Table {
       name: "Bob Resolver",
       password: process.env.ADMIN_PASSWORD || "fdr*vjy!jrn4DKD4qxe",
       email: "resolver@vacso.com",
+      allowLogin: true,
     });
 
     this.addRecord({

@@ -13,6 +13,19 @@ frameworkTicketing is alpha level code. It is under active development and shoul
 - **SAML Single Sign-On (SSO)**: Integrated SSO capabilities for secure and convenient user authentication, supporting widely-used services like Microsoft Azure AD and Google Workspace.
 - **Email Integration**: Seamlessly connect with Microsoft Exchange Online and Google Gmail for email functionalities within your applications.
 
+## Demo
+
+https://demo.vacso.com
+
+| Demo Username      | Demo Password                                |
+| ------------------ | -------------------------------------------- |
+| admin              | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+| resolver@vacso.com | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+
+To create tickets via email send an email to: demo@vacso.com. Warning: your email address will be added to the system for others to see. Use a burner account.
+
+All outbound emails are disabled in the demo.
+
 ## Install
 
 ### Getting Started
@@ -69,12 +82,28 @@ check out the files in /backend/config and update as nessary.
 
 ```bash
 cd docker
-podman-compose up
+docker compose up
 ```
 
 #### Login to the app
 
 Go to http://yourserverip/. You can find the random password for admin in the .env file.
+
+### SSL Certificates
+
+The provided docker compose will automatically create a self signed certificate. Then it will attempt to obtain a certificate from Let's Encrypt to replace the self signed certificate. This process takes a couple of minutes. If you still have a self signed cert after 5 minutes, there has been a failure and check the logs of the certbot container. Internet accessability on port 80 is required for Let's Encrypt to work.
+
+The Let's Encrypt SSL cert will be automatically renewed and replaced as nessesary.
+
+### Setup Backups
+
+If using the provided docker compose, MariaDB is automatically backed up to the folder /docker/backup/mariadb nightly. Backing up that directory, your .env file, and the /backend/config directory should be everything you need.
+
+### Setup Monitoring
+
+To monitor up time, the Node API backend provides a health check endpoint at /api/core/healthcheck/status. Use a monitoring tool to poll it every minute searching for "API is healthy". If there is an error but data can be returned "API failed" will be returned.
+
+The status endpoint pulls the system user record from the user table to test connectivity and functionality of the DB server.
 
 ### Setup Email
 
@@ -115,6 +144,20 @@ Supported. Instructions coming soon.
 ### Setup Single Sign On via SAML
 
 #### Microsoft
+
+1. Open the Enterprise application created for email. If not using Microsoft for email, follow steps 1 through 6.
+1. Go to the Manage->Single Sign On page inside the enterprise application.
+1. Under "Select a single sign-on method" click SAML.
+1. In section #1, "Basic SAML Configuration", click Edit.
+1. Under Identifier (Entity ID), click "Add Identifier"
+1. Type in a unique identifier. It can be anything. This must match your 'entity' in the framework SAML config.
+1. Under "Reply URL (Assertion Consumer Service URL)", click "Add reply URL" and add your reply URL. This URL is the URL Microsoft will post the signed SAML assertion after the user is authenticated.
+   1. Your URL should be in the format: https://<_your domain_>/api/core/saml/acs/<_saml key_>
+   1. Replace <_your domain_> with your domain name. This does not need to be publicly accessable but must be accessible by the user.
+   1. Replace <_saml key_> with the key you used in the /backend/config/saml.js config. In the example config this would be ms or google.
+1. Click "Save" at the top.
+1. In section 3, "SAML Certificates", download the Certificate (Base64). Copy and paste the contents of this file into the certificates key in /backend/config/saml.js config.
+1. In section 4, "Set up <_Name you gave the enterprise app_>", copy the "Login URL". Paste this into the loginUrl key in /backend/config/saml.js. This is the URL framework will send the user to to authenticate them before they are sent back to the Reply URL.
 
 #### Google
 
