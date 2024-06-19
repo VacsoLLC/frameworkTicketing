@@ -55,7 +55,6 @@ export default class Ticket extends Table {
       columnType: "text",
       index: true,
       helpText: "Body of the ticket",
-      
     });
 
     this.manyToOneAdd({
@@ -301,7 +300,7 @@ export default class Ticket extends Table {
       name: "Bob Resolver",
       password: process.env.ADMIN_PASSWORD || "fdr*vjy!jrn4DKD4qxe",
       email: "resolver@vacso.com",
-      allowLogin: true,
+      loginAllowed: true,
     });
 
     this.addRecord({
