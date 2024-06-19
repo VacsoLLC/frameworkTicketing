@@ -223,10 +223,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@vacso/frameworkbackend@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@vacso/frameworkbackend/-/frameworkbackend-1.0.8.tgz#70c76acd8a611d4b27ce8419564bab7e50061d7d"
-  integrity sha512-/fYx0x8jNQF+ObcweUmp8nLCJFBfAPHJsS6NcyckcirK1qeIxDXev7rgpDg7EflO8N9K2F8/w2mg6KZLPLsmXQ==
+"@vacso/frameworkbackend@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@vacso/frameworkbackend/-/frameworkbackend-1.0.10.tgz#be820cb8e9a31f94e21e0658604c10d346012a27"
+  integrity sha512-DSX3C5rFaex7AQG6x8SUPdhOPblhxtOn9wcPwVPRixVK4sQcXlAD/Vr8TBwUrNqy/SC+VZvxbXQIEMiP7kns6A==
   dependencies:
     "@azure/identity" "^4.1.0"
     "@azure/msal-node" "^2.7.0"
