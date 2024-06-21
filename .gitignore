@@ -5,3 +5,5 @@ node_modules
 .env
 docker/data
 docker/backup
+backend/coverage
+frontend/cert

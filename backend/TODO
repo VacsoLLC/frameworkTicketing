@@ -1,7 +1,5 @@
 - Add switch to allow creating users by non admins
 
-
-
 - Allow requesters to
 -- login at all (via admin create local account or saml)
 -- see thier tickets
