@@ -7,3 +7,5 @@ docker/data
 docker/backup
 backend/coverage
 frontend/cert
+playwright-report
+test-results

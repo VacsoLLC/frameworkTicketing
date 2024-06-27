@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set DEBUG=express:* & nodemon --inspect ./index.mjs",
     "dev-no-nodemon": "node --inspect ./index.mjs",
     "indocker": "node ./index.mjs"
@@ -14,10 +13,12 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@vacso/frameworkbackend": "^1.0.10",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "mysql2": "^3.9.7",
     "nodemon": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8"
   }
 }
