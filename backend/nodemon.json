@@ -1,4 +1,8 @@
 {
-  "watch": ["src", "node_modules/@vacso/frameworkBackend"],
+  "watch": [
+    "src",
+    "node_modules/@vacso/frameworkBackend",
+    "../../frameworkBackend/src"
+  ],
   "ignore": ["tests/*"]
 }

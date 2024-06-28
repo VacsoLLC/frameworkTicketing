@@ -340,8 +340,8 @@ export default class Ticket extends Table {
       // Register a fancy query modifier for the user table
       this.packages.core.user.queryModifierAdd(
         "ticketing.ticket.resolver",
-        (query, knex) => {
-          return query.whereIn(
+        (query, knex, args) => {
+          const newQuery = query.whereIn(
             "id",
             knex
               .select("id2")
@@ -351,6 +351,11 @@ export default class Ticket extends Table {
                 knex.select("id").from("role").where("name", "Resolver")
               )
           );
+          if (args.value) {
+            // If the current value of the field is not included in the previous filter, we still want to include it in the list.
+            newQuery.orWhere("id", args.value);
+          }
+          return newQuery;
         }
       );
 
