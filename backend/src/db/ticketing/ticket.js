@@ -9,6 +9,10 @@ export default class Ticket extends Table {
   constructor(args) {
     super({ name: "Ticket", className: "ticket", ...args });
 
+    this.rolesWriteAdd("Resolver", "Admin");
+    this.rolesReadAdd("Authenticated");
+    this.rolesDeleteAdd("Admin");
+
     this.columnAdd({
       columnName: "created",
       friendlyName: "Created",
@@ -21,12 +25,13 @@ export default class Ticket extends Table {
     });
 
     this.manyToOneAdd({
+      columnName: "requester",
+      helpText: "User who requested the ticket",
+      rolesWrite: ["Resolver", "Admin"],
+      rolesRead: ["Authenticated"],
       referencedTableName: "user",
       referencedDb: "core",
       referenceCreate: true,
-
-      columnName: "requester",
-      helpText: "User who requested the ticket",
       displayColumns: [
         {
           columnName: "name",
@@ -47,6 +52,7 @@ export default class Ticket extends Table {
       columnType: "string",
       index: true,
       helpText: "Subject or Title of the ticket",
+      rolesCreate: ["Authenticated"],
     });
 
     this.columnAdd({
@@ -55,13 +61,16 @@ export default class Ticket extends Table {
       columnType: "text",
       index: true,
       helpText: "Body of the ticket",
+      rolesCreate: ["Authenticated"],
     });
 
     this.manyToOneAdd({
-      referencedTableName: "group",
-      referencedDb: "core",
       columnName: "group",
       helpText: "Group the ticket is assigned to",
+      rolesWrite: ["Resolver", "Admin"],
+      rolesRead: ["Resolver", "Admin", "Authenticated"],
+      referencedTableName: "group",
+      referencedDb: "core",
       displayColumns: [
         {
           columnName: "name",
@@ -74,11 +83,13 @@ export default class Ticket extends Table {
 
     // Example usage with custom column name and displayColumns (though displayColumns isn't directly utilized in schema creation)
     this.manyToOneAdd({
+      columnName: "assignedTo",
+      helpText: "User the ticket is assigned to",
+      rolesWrite: ["Resolver", "Admin"],
+      rolesRead: ["Resolver", "Admin", "Authenticated"],
       referencedTableName: "user",
       referencedDb: "core",
       queryModifier: "ticketing.ticket.resolver",
-      columnName: "assignedTo",
-      helpText: "User the ticket is assigned to",
       displayColumns: [
         {
           columnName: "name",
@@ -87,8 +98,12 @@ export default class Ticket extends Table {
       ],
 
       tabName: "Tickets Assigned",
-      defaultValue: ({ user }) => {
-        return user.id;
+      defaultValue: async ({ user }) => {
+        if (await user.userHasAnyRoleName("Resolver")) {
+          return user.id;
+        } else {
+          return "";
+        }
       },
       index: true,
     });
@@ -96,6 +111,8 @@ export default class Ticket extends Table {
     this.columnAdd({
       columnName: "status",
       friendlyName: "Status",
+      rolesWrite: ["Resolver", "Admin"],
+      rolesRead: ["Resolver", "Admin", "Authenticated"],
       //columnType: 'string',
       index: true,
       helpText: "Status of the ticket",
@@ -161,6 +178,7 @@ export default class Ticket extends Table {
       view: null,
       order: 1,
       icon: "pi-ticket",
+      roles: ["Resolver", "Admin"],
     });
 
     this.addMenuItem({
@@ -168,6 +186,7 @@ export default class Ticket extends Table {
       parent: "Tickets",
       icon: "pi-list",
       order: 99,
+      roles: ["Resolver", "Admin"],
     });
 
     this.addMenuItem({
@@ -178,6 +197,17 @@ export default class Ticket extends Table {
       },
       icon: "pi-user",
       order: 1,
+      roles: ["Resolver", "Admin"],
+    });
+
+    this.addMenuItem({
+      label: "My Tickets",
+      rolesHide: ["Resolver", "Admin"],
+    });
+
+    this.addMenuItem({
+      label: "Create Ticket",
+      navigate: "/ticketing/ticket/create",
     });
 
     this.addMenuItem({
@@ -188,6 +218,15 @@ export default class Ticket extends Table {
       },
       icon: "pi-users",
       order: 2,
+      roles: ["Resolver", "Admin"],
+    });
+
+    // Requesters can only see their own tickets
+    this.addAccessFilter(async (user, query) => {
+      if (user && !(await user.userHasAnyRoleName("Resolver", "Admin"))) {
+        query.where("requester", user.id);
+      }
+      return [query];
     });
 
     this.actionAdd({
@@ -195,12 +234,14 @@ export default class Ticket extends Table {
       method: "assignToMe",
       verify: "Assign this ticket to yourself?",
       helpText: "Assign this ticket to yourself.",
+      rolesExecute: ["Resolver", "Admin"],
     });
 
     this.actionAdd({
       label: "Request Feedback",
       method: "requestFeedback",
       helpText: "Request feedback from the user.",
+      rolesExecute: ["Resolver", "Admin"],
       verify:
         'Provide a commment to the user requesting additional information. The comment will be sent to the user and the ticket will be updated to "Feedback Requested" status.',
       inputs: {
@@ -218,6 +259,7 @@ export default class Ticket extends Table {
     this.actionAdd({
       label: "Public Update",
       method: "publicUpdate",
+      rolesExecute: ["Resolver", "Admin"],
       verify: "The comment will be sent to the user.",
       helpText: "Add a public comment to the ticket.",
       inputs: {
@@ -235,6 +277,7 @@ export default class Ticket extends Table {
     this.actionAdd({
       label: "Private Update",
       method: "privateUpdate",
+      rolesExecute: ["Resolver", "Admin"],
       verify: "The comment will not be sent to the user.",
       helpText: "Add a private comment to the ticket.",
       inputs: {
@@ -252,6 +295,7 @@ export default class Ticket extends Table {
     this.actionAdd({
       label: "Time Entry",
       method: "timeEntry",
+      rolesExecute: ["Resolver", "Admin"],
       verify: "Add a time entry to this ticket? Time is entered in minutes.",
       helpText: "Add a time entry to this ticket.",
       inputs: {
@@ -275,6 +319,38 @@ export default class Ticket extends Table {
         },
         Minutes: {
           fieldType: "number",
+          required: true,
+        },
+      },
+    });
+
+    // These actions are just for requesters.
+    this.actionAdd({
+      label: "Comment",
+      method: "requesterComment",
+      helpText: "Add a comment to the ticket.",
+      rolesExecute: ["Authenticated"],
+      rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
+      inputs: {
+        Comment: {
+          fieldType: "textArea",
+          required: true,
+        },
+      },
+    });
+
+    // These actions are just for requesters.
+    this.actionAdd({
+      label: "Close Ticket",
+      method: "closeTicket",
+      helpText: "Close this ticket.",
+      rolesExecute: ["Authenticated"],
+      rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
+      verify:
+        "Are you sure you want to close this ticket? This action can not be undone. Please provide a comment on why you are closing the ticket.",
+      inputs: {
+        Comment: {
+          fieldType: "textArea",
           required: true,
         },
       },
@@ -318,6 +394,23 @@ export default class Ticket extends Table {
     });
 
     this.initAdd(async () => {
+      this.packages.core.comment.rolesReadAdd("Authenticated");
+      this.packages.core.comment.rolesWriteAdd("Resolver", "Admin");
+      this.packages.core.comment.addAccessFilter(async (user, query) => {
+        // Plain users can't read private comments
+        if (user && !(await user.userHasAnyRoleName("Resolver", "Admin"))) {
+          query.where("type", "!=", "Private");
+          const that = this;
+          query.innerJoin("ticketing.ticket", function () {
+            this.on("ticket.id", "=", "comment.row");
+            this.andOn("comment.db", "=", that.knex.raw("'ticketing'"));
+            this.andOn("comment.table", "=", that.knex.raw("'ticket'"));
+            this.andOn("requester", that.knex.raw(`'${user.id}'`));
+          });
+        }
+        return [query];
+      });
+
       this.packages.core.event.on("email", async (email) => {
         await this.createFromEmail(email);
       });
@@ -471,7 +564,7 @@ export default class Ticket extends Table {
     }
 
     args.record = await this.packages[args.db][args.table].recordGet({
-      where: { id: args.row },
+      where: { "ticket.id": args.row },
     });
 
     try {
@@ -515,6 +608,27 @@ export default class Ticket extends Table {
     return {};
   }
 
+  async requesterComment({ recordId, Comment, req }) {
+    await this.packages.core.comment.createComment({
+      req,
+      db: this.db,
+      table: this.table,
+      recordId,
+      comment: Comment,
+      type: "Public",
+    });
+
+    await this.recordUpdate({
+      recordId: recordId,
+      data: {
+        status: "Feedback Received",
+      },
+      req,
+    });
+
+    return {};
+  }
+
   async publicUpdate({ recordId, Comment, Minutes, req }) {
     await this.packages.core.comment.createComment({
       req,
@@ -526,7 +640,7 @@ export default class Ticket extends Table {
     });
 
     if (Minutes) {
-      this.timeEntry({ recordId, Minutes, req });
+      await this.timeEntry({ recordId, Minutes, req });
     }
 
     return {};
@@ -626,7 +740,7 @@ export default class Ticket extends Table {
           type: "Public",
         });
 
-        this.recordUpdate({
+        await this.recordUpdate({
           recordId: record.id,
           data: {
             status: "Feedback Received",
