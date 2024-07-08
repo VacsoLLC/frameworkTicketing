@@ -381,6 +381,15 @@ export default class Ticket extends Table {
 
     this.addRecord({
       packageName: "core",
+      className: "user",
+      name: "Frank Requester",
+      password: process.env.ADMIN_PASSWORD || "fdr*vjy!jrn4DKD4qxe",
+      email: "requester@vacso.com",
+      loginAllowed: true,
+    });
+
+    this.addRecord({
+      packageName: "core",
       className: "user_group",
       id1: 1,
       id2: 3,

@@ -17,10 +17,11 @@ frameworkTicketing is alpha level code. It is under active development and shoul
 
 https://demo.vacso.com
 
-| Demo Username      | Demo Password                                |
-| ------------------ | -------------------------------------------- |
-| admin              | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
-| resolver@vacso.com | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+| Demo Username       | Demo Password                                |
+| ------------------- | -------------------------------------------- |
+| admin               | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+| resolver@vacso.com  | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+| requester@vacso.com | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
 
 To create tickets via email send an email to: demo@vacso.com. Warning: your email address will be added to the system for others to see. Use a burner account.
 
@@ -171,12 +172,12 @@ Vacso frameworkTicketing is an open-source project, and we welcome contributions
 
 To develop you'll need to:
 
-*  Checkout frameworkBackend, frameworkFrontend, and frameworkTicketing into the same folder (IE /devel/frameworkTicketing, /devel/frameworkBackend, /devel/frameworkFrontend). 
-* Then use "Open workspace from file" in VS Code to open frameworkTicketing/framework.code-workspace.
-* in frameworkBackend run "yarn install" and "yarn link" 
-* in framworkFrontend run "yarn install" and "yarn link" 
-* In framworkTicketing/frontend run "yarn link @vacso/frameworkFrontend", and "yarn install"
-* In frameworkTicketing/backend run "yarn link @vacso/frameworkBackend", and "yarn install". 
+- Checkout frameworkBackend, frameworkFrontend, and frameworkTicketing into the same folder (IE /devel/frameworkTicketing, /devel/frameworkBackend, /devel/frameworkFrontend).
+- Then use "Open workspace from file" in VS Code to open frameworkTicketing/framework.code-workspace.
+- in frameworkBackend run "yarn install" and "yarn link"
+- in framworkFrontend run "yarn install" and "yarn link"
+- In framworkTicketing/frontend run "yarn link @vacso/frameworkFrontend", and "yarn install"
+- In frameworkTicketing/backend run "yarn link @vacso/frameworkBackend", and "yarn install".
 
 This should give you a development enviorment where you can make changes and test any of the 3 packages.
 
