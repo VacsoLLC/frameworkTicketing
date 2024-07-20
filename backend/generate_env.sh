@@ -20,6 +20,9 @@ echo "MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD" > .env
 echo "MARIADB_PASSWORD=$MARIADB_PASSWORD" >> .env
 echo "SECRET=$SECRET" >> .env
 echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> .env
+echo "NODE_ENV=production" >> .env
+echo "DOMAIN_NAME=CHANGEME" >> .env
+echo "CERTBOT_EMAIL=CHANGEME" >> .env
 
 
 echo ".env file has been created with random passwords."
