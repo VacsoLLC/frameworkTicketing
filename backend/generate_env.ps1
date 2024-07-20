@@ -15,5 +15,8 @@ $ADMIN_PASSWORD = GenerateRandomPassword  # Generate yet another random password
 "MARIADB_PASSWORD=$MARIADB_PASSWORD" | Add-Content -Path .env -Encoding UTF8
 "SECRET=$SECRET" | Add-Content -Path .env -Encoding UTF8
 "ADMIN_PASSWORD=$ADMIN_PASSWORD" | Add-Content -Path .env -Encoding UTF8
+"NODE_ENV=production" | Add-Content -Path .env -Encoding UTF8
+"DOMAIN_NAME=CHANGEME" | Add-Content -Path .env -Encoding UTF8
+"CERTBOT_EMAIL=CHANGEME" | Add-Content -Path .env -Encoding UTF8
 
 Write-Host ".env file has been created with random passwords."

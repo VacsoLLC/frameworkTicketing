@@ -40,7 +40,7 @@ This was tested on a fresh install of Ubuntu 24. You can use any up to date linu
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install git
+sudo apt-get -y install git docker.io docker-compose-v2
 ```
 
 Follow the instructions here to install docker: https://docs.docker.com/engine/install/ubuntu/
@@ -53,9 +53,9 @@ Start by cloning the Vacso Framework repository to your local machine.
 git clone https://github.com/vacsollc/frameworkTicketing.git
 ```
 
-#### Generate enivorment variables
+#### Generate and update enivorment variables
 
-Creates random passwords and secrets for operation.
+Creates random passwords and secrets for operation. Edit the file and update the DOMAIN_NAME and CERTBOT_EMAIL variables.
 
 Unix
 
