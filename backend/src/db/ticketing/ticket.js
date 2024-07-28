@@ -1,5 +1,6 @@
 //import Table from "../../table.js";
-import { Table } from "@vacso/frameworkbackend";
+import { Table, systemUser } from "@vacso/frameworkbackend";
+
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
@@ -40,7 +41,7 @@ export default class Ticket extends Table {
       ],
 
       tabName: "Tickets Opened",
-      defaultValue: ({ user }) => {
+      defaultValue: async ({ user }) => {
         return user.id;
       },
       index: true,
@@ -527,7 +528,7 @@ export default class Ticket extends Table {
           emailId: results.emailId,
           emailConversationId: results.emailConversationId,
         },
-        req,
+        req: systemUser(req),
       });
     }
 
@@ -619,7 +620,8 @@ export default class Ticket extends Table {
 
   async requesterComment({ recordId, Comment, req }) {
     await this.packages.core.comment.createComment({
-      req,
+      req: systemUser(req), // execute as system user as the actual user doesn't have writes to write to the table.
+      author: req.user.id,
       db: this.db,
       table: this.table,
       recordId,
@@ -632,7 +634,7 @@ export default class Ticket extends Table {
       data: {
         status: "Feedback Received",
       },
-      req,
+      req: systemUser(req),
     });
 
     return {};
@@ -727,11 +729,17 @@ export default class Ticket extends Table {
 
   async createFromEmail(message) {
     if (message.emailConversationId) {
-      const record = await this.recordGet({
-        where: {
-          emailConversationId: message.emailConversationId,
-        },
-      });
+      let record;
+
+      try {
+        record = await this.recordGet({
+          where: {
+            emailConversationId: message.emailConversationId,
+          },
+        });
+      } catch (e) {
+        // noop
+      }
 
       if (record) {
         console.log("Found existing ticket, adding comment.", record);
