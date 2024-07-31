@@ -17,49 +17,38 @@ test("login", async ({ page }) => {
 test("create ticket", async ({ page }) => {
   await login(page);
 
-  await page
-    .locator("a")
-    .filter({ hasText: /^Tickets$/ })
-    .click();
-  await page.getByLabel("All Tickets").locator("a").click();
-  await page.getByRole("button", { name: "" }).click();
-  await page.getByPlaceholder("Subject or Title of the ticket").click();
-  await page.getByPlaceholder("Subject or Title of the ticket").fill("Test 1");
-  await page.getByPlaceholder("Body of the ticket").click();
-  await page.getByPlaceholder("Body of the ticket").fill("Test Body");
-  await page
-    .locator("#pr_id_26_content div")
-    .filter({ hasText: "Groupempty" })
-    .getByRole("button")
-    .first()
-    .click();
-  await page.getByLabel("Helpdesk").click();
-  await page
-    .locator("div")
-    .filter({ hasText: /^empty$/ })
-    .getByRole("button")
-    .click();
-  await page.getByLabel("Bob Resolver").getByText("Bob Resolver").click();
-  await page.getByLabel("Create", { exact: true }).click();
+  await page.getByLabel("Create Ticket").locator("a").click();
 
+  await textField(page, "subject", "Test2");
+  await textField(page, "body", "Test Body");
+  await selectDropdown(page, "group", "Helpdesk");
+  await selectDropdown(page, "assignedTo", "Bob Resolver");
+  await clickButton(page, "Create");
   await checkAlert(page, "Record created successfully. ID:");
 
-  await page.getByPlaceholder("Body of the ticket").click();
-  await page.getByPlaceholder("Body of the ticket").fill("Test Body asdf");
-  await page.getByLabel("Update", { exact: true }).click();
+  await textField(page, "body", "Test Body asdf");
+  await clickButton(page, "Update");
   await checkAlert(page, "Update completed successfully");
 
-  // update the requester to system
-  await page.locator('div#requester[data-pc-name="dropdown"]').click();
-  await page
-    .locator('span.p-dropdown-item-label[data-pc-section="itemlabel"]', {
-      hasText: "System",
-    })
-    .click();
-
-  await page.getByLabel("Update", { exact: true }).click();
+  await selectDropdown(page, "requester", "System");
+  await clickButton(page, "Update");
   await checkAlert(page, "Update completed successfully");
 });
+
+async function textField(page, field, value) {
+  await page.fill(`#${field}`, value);
+}
+
+async function selectDropdown(page, field, option) {
+  await page.locator(`#${field} .p-dropdown-trigger`).click();
+  await page
+    .locator(`.p-dropdown-panel .p-dropdown-item:has-text("${option}")`)
+    .click();
+}
+
+async function clickButton(page, text) {
+  await page.locator(`button[aria-label="${text}"]`).click();
+}
 
 async function checkAlert(page, message) {
   // Wait for the alert to appear. This is usually called by an action that triggers an alert. It may take a bit for it to pop up.
@@ -72,15 +61,10 @@ async function checkAlert(page, message) {
 
   let messageFound = false;
 
-  //const test1 = await alerts.nth(0).textContent();
-  //const test2 = await alerts.nth(1).textContent();
-  //console.log({ test1, test2, count });
-
   // Iterate through each alert element
   for (let i = 0; i < count; i++) {
     // Get the text content of the alert
     const alertText = await alerts.nth(i).textContent();
-    //console.log("alertText", alertText);
 
     // Check if the alert contains the message
     if (alertText.includes(message)) {
