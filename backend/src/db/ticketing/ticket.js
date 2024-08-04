@@ -1,5 +1,5 @@
 //import Table from "../../table.js";
-import { Table, systemUser } from "@vacso/frameworkbackend";
+import { Table, systemUser, elevateUser } from "@vacso/frameworkbackend";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -528,7 +528,7 @@ export default class Ticket extends Table {
           emailId: results.emailId,
           emailConversationId: results.emailConversationId,
         },
-        req: systemUser(req),
+        req,
       });
     }
 
@@ -549,7 +549,7 @@ export default class Ticket extends Table {
           body: data.body,
         }),
         provider: data.emailProvider,
-        req,
+        req: elevateUser(req),
       });
     } catch (error) {
       req.message({
@@ -597,6 +597,10 @@ export default class Ticket extends Table {
   }
 
   async timeEntry({ recordId, Minutes, req }) {
+    if (isNaN(Minutes) || Minutes < 1) {
+      throw new Error("Time must be greater than 0.");
+    }
+
     await this.packages.core.time.createEntry({
       req,
       db: this.db,
@@ -620,8 +624,7 @@ export default class Ticket extends Table {
 
   async requesterComment({ recordId, Comment, req }) {
     await this.packages.core.comment.createComment({
-      req: systemUser(req), // execute as system user as the actual user doesn't have writes to write to the table.
-      author: req.user.id,
+      req: elevateUser(req), // execute as system user as the actual user doesn't have writes to write to the table.
       db: this.db,
       table: this.table,
       recordId,
@@ -634,7 +637,7 @@ export default class Ticket extends Table {
       data: {
         status: "Feedback Received",
       },
-      req: systemUser(req),
+      req: elevateUser(req),
     });
 
     return {};
@@ -694,11 +697,11 @@ export default class Ticket extends Table {
       recordId,
       comment: Comment,
       status: "Closed",
-      req,
+      req: elevateUser(req),
     });
 
-    if (Minutes) {
-      this.timeEntry({ recordId, Minutes, req });
+    if (Minutes && !isNaN(Minutes)) {
+      await this.timeEntry({ recordId, Minutes, req });
     }
 
     return {};
@@ -736,6 +739,7 @@ export default class Ticket extends Table {
           where: {
             emailConversationId: message.emailConversationId,
           },
+          req: systemUser(this),
         });
       } catch (e) {
         // noop
@@ -792,9 +796,7 @@ export default class Ticket extends Table {
       },
       // TODO: need a better way of calling table functions from a/as a system user
       req: {
-        user: {
-          id: "1",
-        },
+        user: systemUser(this),
         action: "Ticket Create from Email",
       },
     });
