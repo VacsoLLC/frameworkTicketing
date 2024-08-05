@@ -303,12 +303,14 @@ export default class Ticket extends Table {
         Minutes: {
           fieldType: "number",
           required: true,
+          validations: ["wholeNumber"],
         },
       },
     });
 
     this.actionAdd({
       label: "Close Ticket",
+      id: "Close Ticket Resolver",
       method: "closeTicket",
       helpText: "Close this ticket.",
       verify:
