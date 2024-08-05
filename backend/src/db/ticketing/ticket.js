@@ -247,7 +247,7 @@ export default class Ticket extends Table {
         'Provide a commment to the user requesting additional information. The comment will be sent to the user and the ticket will be updated to "Feedback Requested" status.',
       inputs: {
         Comment: {
-          fieldType: "textArea",
+          fieldType: "text",
           required: true,
         },
         Minutes: {
@@ -265,7 +265,7 @@ export default class Ticket extends Table {
       helpText: "Add a public comment to the ticket.",
       inputs: {
         Comment: {
-          fieldType: "textArea",
+          fieldType: "text",
           required: true,
         },
         Minutes: {
@@ -283,7 +283,7 @@ export default class Ticket extends Table {
       helpText: "Add a private comment to the ticket.",
       inputs: {
         Comment: {
-          fieldType: "textArea",
+          fieldType: "text",
           required: true,
         },
         Minutes: {
@@ -315,7 +315,7 @@ export default class Ticket extends Table {
         "Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.",
       inputs: {
         Comment: {
-          fieldType: "textArea",
+          fieldType: "text",
           required: true,
         },
         Minutes: {
@@ -334,7 +334,7 @@ export default class Ticket extends Table {
       rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
       inputs: {
         Comment: {
-          fieldType: "textArea",
+          fieldType: "text",
           required: true,
         },
       },
@@ -351,7 +351,7 @@ export default class Ticket extends Table {
         "Are you sure you want to close this ticket? This action can not be undone. Please provide a comment on why you are closing the ticket.",
       inputs: {
         Comment: {
-          fieldType: "textArea",
+          fieldType: "text",
           required: true,
         },
       },
