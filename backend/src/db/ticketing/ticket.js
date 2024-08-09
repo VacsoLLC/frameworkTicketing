@@ -52,8 +52,16 @@ export default class Ticket extends Table {
       friendlyName: "Subject",
       columnType: "string",
       index: true,
+      required: true,
       helpText: "Subject or Title of the ticket",
       rolesCreate: ["Authenticated"],
+      validations: [
+        ({ args }) => {
+          if (args.subject.length < 5) {
+            return "Subject must be at least 5 characters long.";
+          }
+        },
+      ],
     });
 
     this.columnAdd({
@@ -252,7 +260,7 @@ export default class Ticket extends Table {
         },
         Minutes: {
           fieldType: "number",
-          required: true,
+          required: false,
         },
       },
     });
@@ -270,7 +278,7 @@ export default class Ticket extends Table {
         },
         Minutes: {
           fieldType: "number",
-          required: true,
+          required: false,
         },
       },
     });
@@ -288,14 +296,15 @@ export default class Ticket extends Table {
         },
         Minutes: {
           fieldType: "number",
-          required: true,
+          required: false,
         },
       },
     });
 
     this.actionAdd({
       label: "Time Entry",
-      method: "timeEntry",
+      //method: "timeEntry",
+      method: this.timeEntry,
       rolesExecute: ["Resolver", "Admin"],
       verify: "Add a time entry to this ticket? Time is entered in minutes.",
       helpText: "Add a time entry to this ticket.",
@@ -303,14 +312,20 @@ export default class Ticket extends Table {
         Minutes: {
           fieldType: "number",
           required: true,
-          validations: ["wholeNumber"],
+          validations: [
+            ({ args }) => {
+              if (isNaN(args.Minutes) || args.Minutes < 1) {
+                return "Minutes must be greater than 0.";
+              }
+            },
+          ],
         },
       },
     });
 
     this.actionAdd({
       label: "Close Ticket",
-      id: "Close Ticket Resolver",
+      id: "CloseTicketResolver",
       method: "closeTicket",
       helpText: "Close this ticket.",
       verify:
@@ -322,7 +337,7 @@ export default class Ticket extends Table {
         },
         Minutes: {
           fieldType: "number",
-          required: true,
+          required: false,
         },
       },
     });
@@ -599,10 +614,6 @@ export default class Ticket extends Table {
   }
 
   async timeEntry({ recordId, Minutes, req }) {
-    if (isNaN(Minutes) || Minutes < 1) {
-      throw new Error("Time must be greater than 0.");
-    }
-
     await this.packages.core.time.createEntry({
       req,
       db: this.db,
@@ -796,7 +807,7 @@ export default class Ticket extends Table {
         emailId: message.emailId,
         emailProvider: message.emailProvider,
       },
-      // TODO: need a better way of calling table functions from a/as a system user
+
       req: {
         user: systemUser(this),
         action: "Ticket Create from Email",
