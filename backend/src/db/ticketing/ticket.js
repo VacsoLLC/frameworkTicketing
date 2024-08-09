@@ -57,7 +57,7 @@ export default class Ticket extends Table {
       rolesCreate: ["Authenticated"],
       validations: [
         ({ args }) => {
-          if (args.subject.length < 5) {
+          if (args.subject?.length < 5) {
             return "Subject must be at least 5 characters long.";
           }
         },
