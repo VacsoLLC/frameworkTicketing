@@ -244,6 +244,7 @@ export default class Ticket extends Table {
       verify: "Assign this ticket to yourself?",
       helpText: "Assign this ticket to yourself.",
       rolesExecute: ["Resolver", "Admin"],
+      disabled: this.ticketOpen,
     });
 
     this.actionAdd({
@@ -251,6 +252,7 @@ export default class Ticket extends Table {
       method: "requestFeedback",
       helpText: "Request feedback from the user.",
       rolesExecute: ["Resolver", "Admin"],
+      disabled: this.ticketOpen,
       verify:
         'Provide a commment to the user requesting additional information. The comment will be sent to the user and the ticket will be updated to "Feedback Requested" status.',
       inputs: {
@@ -271,6 +273,7 @@ export default class Ticket extends Table {
       rolesExecute: ["Resolver", "Admin"],
       verify: "The comment will be sent to the user.",
       helpText: "Add a public comment to the ticket.",
+      disabled: this.ticketOpen,
       inputs: {
         Comment: {
           fieldType: "text",
@@ -289,6 +292,7 @@ export default class Ticket extends Table {
       rolesExecute: ["Resolver", "Admin"],
       verify: "The comment will not be sent to the user.",
       helpText: "Add a private comment to the ticket.",
+      disabled: this.ticketOpen,
       inputs: {
         Comment: {
           fieldType: "text",
@@ -308,6 +312,7 @@ export default class Ticket extends Table {
       rolesExecute: ["Resolver", "Admin"],
       verify: "Add a time entry to this ticket? Time is entered in minutes.",
       helpText: "Add a time entry to this ticket.",
+      disabled: this.ticketOpen,
       inputs: {
         Minutes: {
           fieldType: "number",
@@ -330,6 +335,7 @@ export default class Ticket extends Table {
       helpText: "Close this ticket.",
       verify:
         "Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.",
+      disabled: this.ticketOpen,
       inputs: {
         Comment: {
           fieldType: "text",
@@ -349,6 +355,7 @@ export default class Ticket extends Table {
       helpText: "Add a comment to the ticket.",
       rolesExecute: ["Authenticated"],
       rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
+      disabled: this.ticketOpen,
       inputs: {
         Comment: {
           fieldType: "text",
@@ -366,10 +373,30 @@ export default class Ticket extends Table {
       rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
       verify:
         "Are you sure you want to close this ticket? This action can not be undone. Please provide a comment on why you are closing the ticket.",
+      disabled: this.ticketOpen,
       inputs: {
         Comment: {
           fieldType: "text",
           required: true,
+        },
+      },
+    });
+
+    this.actionAdd({
+      label: "Reopen Ticket",
+      method: this.openTicket,
+      helpText: "Reopen Ticket.",
+      disabled: this.ticketClose,
+      verify:
+        "Provide a commment to the user explaining why the ticket is being reopened. The comment will be sent to the user and the ticket will be updated to Open status.",
+      inputs: {
+        Comment: {
+          fieldType: "text",
+          required: true,
+        },
+        Minutes: {
+          fieldType: "number",
+          required: false,
         },
       },
     });
@@ -493,6 +520,18 @@ export default class Ticket extends Table {
         path.join(__dirname, "ticket", "newTicketBody.hbs")
       );
     });
+  }
+
+  async ticketClose({ record }) {
+    if (record.status !== "Closed") {
+      return "Ticket must be closed.";
+    }
+  }
+
+  async ticketOpen({ record }) {
+    if (record.status === "Closed") {
+      return "Ticket must not be closed.";
+    }
   }
 
   async sendEmail({
@@ -710,6 +749,21 @@ export default class Ticket extends Table {
       recordId,
       comment: Comment,
       status: "Closed",
+      req: elevateUser(req),
+    });
+
+    if (Minutes && !isNaN(Minutes)) {
+      await this.timeEntry({ recordId, Minutes, req });
+    }
+
+    return {};
+  }
+
+  async openTicket({ recordId, Comment, Minutes, req }) {
+    await this.commentAndChangeStatus({
+      recordId,
+      comment: Comment,
+      status: "Open",
       req: elevateUser(req),
     });
 
