@@ -162,7 +162,7 @@ Supported. Instructions coming soon.
 
 #### Google
 
-Support. Instructions coming soon.
+Supported. Instructions coming soon.
 
 ## Documentation
 
@@ -191,7 +191,7 @@ Vacso Framework is licensed under the [MIT License](LICENSE).
 
 ---
 
-Vacso frameworkTicketing is a proud project by Vacso, LLC. We are committed to providing developers with tools that make building enterprise applications more efficient and enjoyable. Happy coding! 🚀
+Vacso frameworkTicketing is a project by Vacso, LLC.
 
 ```
 
