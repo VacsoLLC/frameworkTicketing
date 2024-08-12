@@ -11,7 +11,7 @@ frameworkTicketing is alpha level code. It is under active development and shoul
 ## Features
 
 - **SAML Single Sign-On (SSO)**: Integrated SSO capabilities for secure and convenient user authentication, supporting widely-used services like Microsoft Azure AD and Google Workspace.
-- **Email Integration**: Seamlessly connect with Microsoft Exchange Online and Google Gmail for email functionalities within your applications.
+- **Email Integration**: Seamlessly connect with Microsoft Exchange Online and Google Gmail for email ticket generation and update notification.
 
 ## Demo
 
