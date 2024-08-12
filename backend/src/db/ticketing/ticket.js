@@ -1,5 +1,10 @@
 //import Table from "../../table.js";
-import { Table, systemUser, elevateUser } from "@vacso/frameworkbackend";
+import {
+  Table,
+  systemUser,
+  elevateUser,
+  systemRequest,
+} from "@vacso/frameworkbackend";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -57,8 +62,8 @@ export default class Ticket extends Table {
       rolesCreate: ["Authenticated"],
       validations: [
         ({ args }) => {
-          if (args.subject?.length < 5) {
-            return "Subject must be at least 5 characters long.";
+          if (args.subject?.length < 1) {
+            return "Subject must be at least 1 characters long.";
           }
         },
       ],
@@ -815,12 +820,14 @@ export default class Ticket extends Table {
       if (record) {
         console.log("Found existing ticket, adding comment.", record);
         this.packages.core.comment.createComment({
-          req: {
-            user: {
-              id: 1,
-            },
+          req: systemRequest(this),
+          /*{
+            user: systemUser(this),
             action: "Ticket Note from Email",
-          },
+            message: (...args) => {
+              console.log("message: ", ...args);
+            },
+          },*/
           db: this.db,
           table: this.table,
           recordId: record.id,
@@ -834,12 +841,15 @@ export default class Ticket extends Table {
             status: "Feedback Received",
             emailId: message.emailId,
           },
-          req: {
-            user: {
-              id: "1",
-            },
+          req: systemRequest(this),
+
+          /*{
+            user: systemUser(this),
             action: "Ticket Note from Email",
-          },
+            message: (...args) => {
+              console.log("message: ", ...args);
+            },
+          },*/
         });
 
         return;
