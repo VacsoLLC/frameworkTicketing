@@ -341,6 +341,7 @@ export default class Ticket extends Table {
       verify:
         "Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.",
       disabled: this.ticketOpen,
+      rolesExecute: ["Resolver", "Admin"],
       inputs: {
         Comment: {
           fieldType: "text",
