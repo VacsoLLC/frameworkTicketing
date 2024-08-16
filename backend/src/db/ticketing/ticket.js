@@ -46,8 +46,8 @@ export default class Ticket extends Table {
       ],
 
       tabName: "Tickets Opened",
-      defaultValue: async ({ user }) => {
-        return user.id;
+      defaultValue: async ({ req }) => {
+        return req.user.id;
       },
       index: true,
     });
@@ -112,9 +112,9 @@ export default class Ticket extends Table {
       ],
 
       tabName: "Tickets Assigned",
-      defaultValue: async ({ user }) => {
-        if (await user.userHasAnyRoleName("Resolver")) {
-          return user.id;
+      defaultValue: async ({ req }) => {
+        if (await req.user.userHasAnyRoleName("Resolver")) {
+          return req.user.id;
         } else {
           return "";
         }
@@ -393,6 +393,7 @@ export default class Ticket extends Table {
       method: this.openTicket,
       helpText: "Reopen Ticket.",
       disabled: this.ticketClose,
+      rolesExecute: ["Resolver", "Admin"],
       verify:
         "Provide a commment to the user explaining why the ticket is being reopened. The comment will be sent to the user and the ticket will be updated to Open status.",
       inputs: {

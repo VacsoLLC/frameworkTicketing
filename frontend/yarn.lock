@@ -709,10 +709,10 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.2.0.tgz"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@vacso/frameworkfrontend@1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@vacso/frameworkfrontend/-/frameworkfrontend-1.0.13.tgz#4c193797d4cc637e70e9acff5a2c1aafb115df71"
-  integrity sha512-UinPu2Y/c8uqs3yirnlF+ptzxmk+aPmr0Y6hYoolOpWXviRNckjpz5wXEspMTEjwcJ9Of7TSIWa5aBi0ZQ7OUQ==
+"@vacso/frameworkfrontend@1.0.18":
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/@vacso/frameworkfrontend/-/frameworkfrontend-1.0.18.tgz#b3b69532c91e07b525a30f2f2fb3e6c72cb89700"
+  integrity sha512-s65TKChvPLRfyOGPamYhLC6SH39IZYxxMehqThmjFlf5SseLX7ptAseO0C8Hiw25Jq4DIRvDZFuLIVWt98Pztw==
   dependencies:
     interweave "^13.1.0"
     jwt-decode "^4.0.0"
