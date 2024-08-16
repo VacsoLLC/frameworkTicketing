@@ -9,3 +9,4 @@ backend/coverage
 frontend/cert
 playwright-report
 test-results
+docker/config/nginx/conf.d/ssl.conf
