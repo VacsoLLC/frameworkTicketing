@@ -61,8 +61,8 @@ export default class Ticket extends Table {
       helpText: "Subject or Title of the ticket",
       rolesCreate: ["Authenticated"],
       validations: [
-        ({ args }) => {
-          if (args.subject?.length < 1) {
+        ({ value }) => {
+          if (value?.length < 1) {
             return "Subject must be at least 1 characters long.";
           }
         },
@@ -323,8 +323,8 @@ export default class Ticket extends Table {
           fieldType: "number",
           required: true,
           validations: [
-            ({ args }) => {
-              if (isNaN(args.Minutes) || args.Minutes < 1) {
+            ({ value }) => {
+              if (isNaN(value) || value < 1) {
                 return "Minutes must be greater than 0.";
               }
             },
