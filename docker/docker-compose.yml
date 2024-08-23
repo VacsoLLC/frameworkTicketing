@@ -34,6 +34,7 @@ services:
     env_file: ../backend/.env
     environment:    
       MARIADB_HOST: mariadb
+      MARQO_HOST: marqo
     depends_on:
       - mariadb
       - margo
@@ -89,7 +90,7 @@ services:
       - ./config/certbot/app:/app
       - /var/run/docker.sock:/var/run/docker.sock:ro  
     entrypoint: ["sh", "-c", "/app/entrypoint.sh"]
-  margo:
+  marqo:
     image: marqoai/marqo:latest
     restart: always
     ports:
