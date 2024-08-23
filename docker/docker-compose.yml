@@ -36,6 +36,7 @@ services:
       MARIADB_HOST: mariadb
     depends_on:
       - mariadb
+      - margo
     logging:
       driver: "json-file"
       options:
@@ -75,7 +76,6 @@ services:
       ofelia.job-exec.mariadb-backup.schedule: "52 36 7 * * *"
       ofelia.job-exec.mariadb-backup.command: "bash /backup.sh"
   certbot:
-    #image: certbot/certbot:latest
     build:
       context: ./dockerfiles/certbot  
       dockerfile: Dockerfile
@@ -89,8 +89,16 @@ services:
       - ./config/certbot/app:/app
       - /var/run/docker.sock:/var/run/docker.sock:ro  
     entrypoint: ["sh", "-c", "/app/entrypoint.sh"]
-
-    
-      
-      
-        
+  margo:
+    image: marqoai/marqo:latest
+    restart: always
+    ports:
+      - '8882:8882'
+    volumes:
+      - ./data/margo:/opt/vespa/var
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+        compress: "true"

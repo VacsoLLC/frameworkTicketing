@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "set DEBUG=express:* & nodemon --inspect ./index.mjs",
+    "index": "node --inspect ./index.mjs --index-all",
     "dev-no-nodemon": "node --inspect ./index.mjs",
     "indocker": "node ./index.mjs"
   },
@@ -13,7 +14,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@vacso/frameworkbackend": "1.0.19",
+    "@vacso/frameworkbackend": "1.0.20",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "handlebars": "^4.7.8",

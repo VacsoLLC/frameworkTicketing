@@ -32,6 +32,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Node Index All",
+      "runtimeExecutable": "npm",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeArgs": ["run", "index"],
+      "trace": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Vite",
       "runtimeExecutable": "npm",
       "cwd": "${workspaceFolder}/frontend",

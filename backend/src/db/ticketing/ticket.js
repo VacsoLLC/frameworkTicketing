@@ -529,6 +529,10 @@ export default class Ticket extends Table {
     });
   }
 
+  async objectToSearchText(object) {
+    return `Subject: ${object.subject}\n${object.body}`;
+  }
+
   async ticketClose({ record }) {
     if (record.status !== "Closed") {
       return "Ticket must be closed.";
