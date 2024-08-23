@@ -45,6 +45,14 @@
       "runtimeExecutable": "npm",
       "cwd": "${workspaceFolder}/frontend",
       "runtimeArgs": ["run", "dev", "--preserve-symlinks"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Update Versions and Publish",
+      "program": "${workspaceFolder}/scripts/update-versions.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [

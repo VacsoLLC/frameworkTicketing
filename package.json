@@ -2,5 +2,8 @@
   "devDependencies": {
     "@playwright/test": "^1.45.3",
     "playwright": "^1.45.3"
+  },
+  "dependencies": {
+    "semver": "^7.6.3"
   }
 }
