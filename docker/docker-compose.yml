@@ -37,7 +37,7 @@ services:
       MARQO_HOST: marqo
     depends_on:
       - mariadb
-      - margo
+      - marqo
     logging:
       driver: "json-file"
       options:
