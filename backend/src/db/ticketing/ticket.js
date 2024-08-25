@@ -620,7 +620,7 @@ export default class Ticket extends Table {
       });
     } catch (error) {
       req.message({
-        detail: `Error sending email: ${error.message}.`,
+        detail: `Error sending email: ${error.message}`,
         severity: "warn",
       });
     }
@@ -655,7 +655,7 @@ export default class Ticket extends Table {
       });
     } catch (error) {
       req.message({
-        detail: `Error sending email: ${error.message}.`,
+        detail: `Error sending email: ${error.message}`,
         severity: "warn",
       });
     }
