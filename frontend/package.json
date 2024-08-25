@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@originjs/vite-plugin-commonjs": "^1.0.3",
-    "@vacso/frameworkfrontend": "1.0.25",
+    "@vacso/frameworkfrontend": "1.0.26",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "chart.js": "^4.4.2",
