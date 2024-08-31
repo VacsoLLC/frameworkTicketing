@@ -1,12 +1,12 @@
-# Vacso frameworkTicketing
+# Vacso Framework Ticketing
 
-Welcome to Vacso frameworkTicketing, an open-source ticketing system designed for enterprise IT departments.
+Welcome to Vacso Framework Ticketing, an open-source ticketing system designed for enterprise IT departments.
 
-frameworkTicketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
+Framework Ticketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
 
 ## WARNING: Alpha!
 
-frameworkTicketing is alpha level code. It is under active development and should not be used in production at this time.
+Framework Ticketing is alpha level code. It is under active development and should not be used in production at this time.
 
 ## Features
 
@@ -31,7 +31,7 @@ All outbound emails are disabled in the demo.
 
 ### Getting Started
 
-To begin using the Vacso frameworkTicketing, follow these steps:
+To begin using the Vacso Framework Ticketing, follow these steps:
 
 #### Install prereqs
 
@@ -168,7 +168,7 @@ Supported. Instructions coming soon.
 
 ## Contributing
 
-Vacso frameworkTicketing is an open-source project, and we welcome contributions from the community. If you're interested in contributing, please read our [contributing guidelines](#) for more information.
+Vacso Framework Ticketing is an open-source project, and we welcome contributions from the community. If you're interested in contributing, please read our [contributing guidelines](#) for more information.
 
 To develop you'll need to:
 
@@ -191,7 +191,7 @@ Vacso Framework is licensed under the [MIT License](LICENSE).
 
 ---
 
-Vacso frameworkTicketing is a project by Vacso, LLC.
+Vacso Framework Ticketing is a project by Vacso, LLC.
 
 ```
 

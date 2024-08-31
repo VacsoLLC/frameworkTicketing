@@ -280,10 +280,10 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@vacso/frameworkbackend@1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@vacso/frameworkbackend/-/frameworkbackend-1.0.19.tgz#2520a9cadacd6a9b3c0f26d3a8f5642fb18ad71a"
-  integrity sha512-uPh7Qrfpo/Ccq8geos+vf9e3ntM4jpWf8I2HSVQJQNeFzgx4w5feBY4qB3U1GoA6BwKIzJYqzkUihbSAh638Kg==
+"@vacso/frameworkbackend@1.0.26":
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/@vacso/frameworkbackend/-/frameworkbackend-1.0.26.tgz#c5af890d1fb70664453a9505e04fbe7335292c72"
+  integrity sha512-HMqugKoTM78sfwFSkkOJ7JKfSPdCy8nK3iSzIdpQToqybTrymzuNHGBYRjo/xuSghUQ6G0rX77bMiNA3v51yXQ==
   dependencies:
     "@azure/identity" "^4.1.0"
     "@azure/msal-node" "^2.7.0"
@@ -687,7 +687,14 @@ core-js-pure@^3.30.2:
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.37.1.tgz#2b4b34281f54db06c9a9a5bd60105046900553bd"
   integrity sha512-J/r5JTHSmzTxbiYYrzXg9w1VpqrYt+gexenBE9pugeyhwPZTAEJddyiReJWsLO6uNQ8xJZFbod6XC7KKwatCiA==
 
-cross-spawn@^7.0.0:
+cross-env@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
+  integrity sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
+  dependencies:
+    cross-spawn "^7.0.1"
+
+cross-spawn@^7.0.0, cross-spawn@^7.0.1:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
   integrity sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==

@@ -7,7 +7,8 @@
     "dev": "set DEBUG=express:* & nodemon --inspect ./index.mjs",
     "index": "node --inspect ./index.mjs --index-all",
     "dev-no-nodemon": "node --inspect ./index.mjs",
-    "indocker": "node ./index.mjs"
+    "indocker": "node ./index.mjs",
+    "importData": "cross-env DEMO_MODE=true node ./index.mjs --import-data=../demodata.json"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "nodemon": "^3.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.8"
+    "@types/node": "^20.14.8",
+    "cross-env": "^7.0.3"
   }
 }

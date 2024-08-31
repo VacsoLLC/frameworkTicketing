@@ -50,6 +50,7 @@ const configs = await loadFromDir("./config");
 
 const config = {
   dbDirs: [dbDir],
+  currentDirectory: path.dirname(fileURLToPath(import.meta.url)),
   ...configs,
 };
 

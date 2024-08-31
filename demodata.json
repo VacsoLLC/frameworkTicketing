@@ -1,0 +1,603 @@
+{
+  "entities": [
+    {
+      "name": "core.group",
+      "ignoreDuplicates": true,
+      "records": [
+        { "name": "IT Hardware" },
+        { "name": "Software Support" },
+        { "name": "Network Operations" },
+        { "name": "Security Team" }
+      ]
+    },
+    {
+      "name": "core.user",
+      "ignoreDuplicates": true,
+      "records": [
+        { "name": "Alice Johnson", "email": "alice.johnson@example.com" },
+        { "name": "Bob Smith", "email": "bob.smith@example.com" },
+        { "name": "Charlie Brown", "email": "charlie.brown@example.com" },
+        { "name": "Diana Prince", "email": "diana.prince@example.com" },
+        { "name": "Ethan Hunt", "email": "ethan.hunt@example.com" }
+      ]
+    },
+    {
+      "name": "ticketing.ticket",
+      "records": [
+        {
+          "subject": "Cannot access email",
+          "body": "I'm unable to log into my work email account. It says my password is incorrect, but I'm sure I'm using the right one.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "Helpdesk" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "bob.smith@example.com"
+          }
+        },
+        {
+          "subject": "New laptop request",
+          "body": "My current laptop is very slow. Can I get a new one?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "VPN connection issues",
+          "body": "I'm having trouble connecting to the VPN from home. It keeps disconnecting every few minutes.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "status": "In Progress",
+          "group": { "$ref": "core.group", "name": "Network Operations" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "ethan.hunt@example.com"
+          }
+        },
+        {
+          "subject": "Software license expired",
+          "body": "The design software I use daily is showing a license expiration message. Can we renew it?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "Software Support" }
+        },
+        {
+          "subject": "Printer not working",
+          "body": "The printer on the 3rd floor is not responding. Paper jam, perhaps?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "bob.smith@example.com"
+          },
+          "status": "Closed",
+          "group": { "$ref": "core.group", "name": "IT Hardware" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          }
+        },
+        {
+          "subject": "Password reset request",
+          "body": "I forgot my password for the company portal. Can you help me reset it?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "status": "Closed",
+          "group": { "$ref": "core.group", "name": "Helpdesk" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "ethan.hunt@example.com"
+          }
+        },
+        {
+          "subject": "New software installation",
+          "body": "I need the latest version of Adobe Creative Suite installed on my computer.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "status": "In Progress",
+          "group": { "$ref": "core.group", "name": "Software Support" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          }
+        },
+        {
+          "subject": "Slow internet connection",
+          "body": "The internet speed in the marketing department has been very slow lately. Can someone check it out?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "bob.smith@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "Network Operations" }
+        },
+        {
+          "subject": "Mobile device setup",
+          "body": "I just got a new company phone. Can someone help me set up my email and other necessary apps?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "ethan.hunt@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "Access to shared drive",
+          "body": "I need access to the Finance department's shared drive for the upcoming audit.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "status": "In Progress",
+          "group": { "$ref": "core.group", "name": "Security Team" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          }
+        },
+        {
+          "subject": "Projector malfunction",
+          "body": "The projector in Conference Room A is not working. We have an important presentation tomorrow.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "Email storage full",
+          "body": "I'm getting warnings that my email storage is almost full. Can we increase the limit or help me clean it up?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "bob.smith@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "Helpdesk" }
+        },
+        {
+          "subject": "Software crash",
+          "body": "The accounting software keeps crashing when I try to generate monthly reports.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "status": "In Progress",
+          "group": { "$ref": "core.group", "name": "Software Support" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          }
+        },
+        {
+          "subject": "New employee setup",
+          "body": "We have a new employee starting next week. Can you prepare a laptop and necessary accounts?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "ethan.hunt@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "Virus alert",
+          "body": "I received a virus alert on my computer after opening an email attachment. What should I do?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "status": "In Progress",
+          "group": { "$ref": "core.group", "name": "Security Team" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "bob.smith@example.com"
+          }
+        },
+        {
+          "subject": "Bluetooth mouse not connecting",
+          "body": "My Bluetooth mouse isn't connecting to my laptop. I've tried restarting both devices.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "Video conferencing setup",
+          "body": "We need help setting up the new video conferencing system in the boardroom.",
+          "requester": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "Website down",
+          "body": "Our company website appears to be down. Can the web team investigate?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "bob.smith@example.com"
+          },
+          "status": "In Progress",
+          "group": { "$ref": "core.group", "name": "Network Operations" },
+          "assignedTo": {
+            "$ref": "core.user",
+            "email": "ethan.hunt@example.com"
+          }
+        },
+        {
+          "subject": "Data recovery request",
+          "body": "I accidentally deleted an important file from my desktop. Is there any way to recover it?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "IT Hardware" }
+        },
+        {
+          "subject": "Remote desktop assistance",
+          "body": "I'm working from home and having trouble accessing the remote desktop. Can someone guide me through the process?",
+          "requester": {
+            "$ref": "core.user",
+            "email": "ethan.hunt@example.com"
+          },
+          "status": "Open",
+          "group": { "$ref": "core.group", "name": "Helpdesk" }
+        }
+      ]
+    },
+    {
+      "name": "core.comment",
+      "records": [
+        {
+          "body": "Have you tried resetting your password through the self-service portal?",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "bob.smith@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Cannot access email"
+          }
+        },
+        {
+          "body": "Yes, I tried that but it didn't work. It says my account is locked.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Cannot access email"
+          }
+        },
+        {
+          "body": "I've unlocked your account. Please try resetting your password again.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "bob.smith@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Cannot access email"
+          }
+        },
+        {
+          "body": "We'll need to check your current laptop's specs and usage. Can you provide more details about its performance issues?",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "New laptop request" }
+        },
+        {
+          "body": "It takes about 5 minutes to boot up, and programs like Excel freeze frequently. The laptop is about 4 years old.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "New laptop request" }
+        },
+        {
+          "body": "Thank you for the details. I'll submit a request for a new laptop. In the meantime, let's try some optimization techniques.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "New laptop request" }
+        },
+        {
+          "body": "I've checked our VPN logs. It seems there might be an issue with your local internet connection. Can you run a speed test and send us the results?",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "ethan.hunt@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "VPN connection issues"
+          }
+        },
+        {
+          "body": "Here are the speed test results: Download: 15 Mbps, Upload: 5 Mbps, Ping: 50ms",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "VPN connection issues"
+          }
+        },
+        {
+          "body": "Thanks for the info. Your internet speed seems sufficient. Let's try updating your VPN client software.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "ethan.hunt@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "VPN connection issues"
+          }
+        },
+        {
+          "body": "I've checked our license management system. The renewal process is already underway. You should receive the new license key within 24 hours.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "bob.smith@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Software license expired"
+          }
+        },
+        {
+          "body": "Thank you for the quick response. I'll keep an eye out for the new license key.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Software license expired"
+          }
+        },
+        {
+          "body": "The printer issue has been resolved. There was a paper jam in the second tray. I've cleared it and run a test print successfully.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Printer not working"
+          }
+        },
+        {
+          "body": "I've checked our license database. Your software license will be renewed within the next 24 hours. You'll receive an email with the new license key.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "bob.smith@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Software license expired"
+          }
+        },
+        {
+          "body": "I've reset your password for the company portal. You should receive an email with instructions to set a new password. Let me know if you need any further assistance.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "ethan.hunt@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Password reset request"
+          }
+        },
+        {
+          "body": "I've started the installation process for Adobe Creative Suite on your computer. It should take about an hour to complete. I'll notify you once it's done.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "New software installation"
+          }
+        },
+        {
+          "body": "We've received your report about slow internet in the marketing department. Our team will conduct a network speed test in that area tomorrow morning. We'll update you with our findings.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "ethan.hunt@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Slow internet connection"
+          }
+        },
+        {
+          "body": "I've scheduled a technician to assist you with setting up your new company phone tomorrow at 2 PM. They'll help you with email configuration and essential app installations.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Mobile device setup"
+          }
+        },
+        {
+          "body": "I've submitted a request to the Finance department for your access to their shared drive. They typically process these requests within 1-2 business days. I'll update you once I hear back from them.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Access to shared drive"
+          }
+        },
+        {
+          "body": "I've dispatched a technician to check the projector in Conference Room A. They should arrive within the next 30 minutes. I'll keep you updated on their progress.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "bob.smith@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Projector malfunction"
+          }
+        },
+        {
+          "body": "I've checked your email account, and it seems you're using 95% of your allocated storage. I can increase your limit, but first, let's try to clean up some space. Can you delete any unnecessary emails or large attachments?",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "Email storage full" }
+        },
+        {
+          "body": "I've reviewed the crash logs for the accounting software. It seems there might be a conflict with a recent Windows update. I'm going to roll back the update and see if that resolves the issue.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "Software crash" }
+        },
+        {
+          "body": "I've started preparing a laptop for the new employee. Can you provide me with their name and department so I can set up the necessary accounts?",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "diana.prince@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "New employee setup" }
+        },
+        {
+          "body": "I've initiated our virus response protocol. Please disconnect your computer from the network immediately. I'll send a technician to your desk within the next 15 minutes to run a thorough scan and clean your system.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "bob.smith@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "Virus alert" }
+        },
+        {
+          "body": "Let's try troubleshooting your Bluetooth mouse. Can you confirm if the mouse has fresh batteries? Also, please try removing the Bluetooth device from your laptop and re-pairing it.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "ethan.hunt@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Bluetooth mouse not connecting"
+          }
+        },
+        {
+          "body": "I've scheduled our AV team to visit the boardroom tomorrow at 10 AM to set up the new video conferencing system. Can you ensure someone will be available to grant them access?",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Video conferencing setup"
+          }
+        },
+        {
+          "body": "We've identified the issue. There was a problem with our DNS configuration. I've made the necessary changes, and the website should be back up within the next 5-10 minutes. Please let me know if you're still unable to access it after that time.",
+          "type": "Public",
+          "author": { "$ref": "core.user", "email": "ethan.hunt@example.com" },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": { "$ref": "ticketing.ticket", "subject": "Website down" }
+        },
+        {
+          "body": "I've initiated a scan of your desktop using our data recovery tools. This process may take a few hours. I'll update you as soon as I have the results. In the future, remember to use our cloud backup solution to prevent data loss.",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "charlie.brown@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Data recovery request"
+          }
+        },
+        {
+          "body": "I'd be happy to help you with accessing the remote desktop. First, can you confirm that you're connected to your home WiFi and not using cellular data? Also, have you installed our VPN client on your home computer?",
+          "type": "Public",
+          "author": {
+            "$ref": "core.user",
+            "email": "alice.johnson@example.com"
+          },
+          "db": "ticketing",
+          "table": "ticket",
+          "row": {
+            "$ref": "ticketing.ticket",
+            "subject": "Remote desktop assistance"
+          }
+        }
+      ]
+    }
+  ]
+}
