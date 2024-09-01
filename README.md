@@ -171,7 +171,7 @@ Supported. Instructions coming soon.
 
 ## Contributing
 
-Vacso Framework Ticketing is an open-source project, and we welcome contributions from the community. If you're interested in contributing, please read our [contributing guidelines](#) for more information.
+Vacso Framework Ticketing is an open-source project, and we welcome contributions from the community. 
 
 To develop you'll need to:
 
@@ -186,7 +186,7 @@ This should give you a development enviorment where you can make changes and tes
 
 ## Support
 
-If you encounter any issues or have questions regarding the Vacso Framework, please file an issue on our [GitHub repository](https://github.com/vacsollc/framework/issues).
+If you encounter any issues or have questions regarding the Vacso Framework Ticketing, please file an issue on our [GitHub repository](https://github.com/vacsollc/framework/issues).
 
 ## License
 
