@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config(); // This line is necessary to load the .env file where your environment variables are defined.
 
 export default {
-  defaultMailbox: "Google",
+  defaultMailbox: process.env.DEFAULT_MAILBOX || "Microsoft", // Loaded from environment
   mailboxes: [
     {
       type: "Microsoft",
