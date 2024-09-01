@@ -24,7 +24,7 @@ https://demo.vacso.com
 | ------------------- | -------------------------------------------- |
 | admin               | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
 | resolver@vacso.com  | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
-| requester@vacso.com | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+| requester@vacso.com | Vacso123!                                    |
 
 To create tickets via email send an email to: demo@vacso.com. Warning: your email address will be added to the system for others to see. Use a burner account.
 

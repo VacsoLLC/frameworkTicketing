@@ -2,6 +2,7 @@
 
 - requester should not have search capabilities
 - default group for new tickets
+- turn demo mode back on
 
 - Requesters:
   -- Change own password (Profile link is broken)
