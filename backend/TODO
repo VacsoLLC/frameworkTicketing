@@ -1,16 +1,19 @@
 - Add switch to allow creating users by non admins
 
+- requester should not have search capabilities
+- default group for new tickets
+
 - Requesters:
--- Change own password (Profile link is broken)
--- Register for an account
+  -- Change own password (Profile link is broken)
+  -- Register for an account
 
 - related record search popup window
 
 - Related fields could be more efficent
--- only pull table once if referenced by multiple fields
+  -- only pull table once if referenced by multiple fields
 
 - Sort by ticket status based on a configured sort order (Feedback Recieved, New, Open, Pending Feedback, Closed)
 
 - Documentation
--- Google SAML
--- Google Email
+  -- Google SAML
+  -- Google Email

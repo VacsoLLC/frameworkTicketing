@@ -4,14 +4,17 @@ Welcome to Vacso Framework Ticketing, an open-source ticketing system designed f
 
 Framework Ticketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
 
-## WARNING: Alpha!
+## WARNING: Beta!
 
-Framework Ticketing is alpha level code. It is under active development and should not be used in production at this time.
+Framework Ticketing is pre-release. It is under active development and should be used with caution.
 
 ## Features
 
-- **SAML Single Sign-On (SSO)**: Integrated SSO capabilities for secure and convenient user authentication, supporting widely-used services like Microsoft Azure AD and Google Workspace.
-- **Email Integration**: Seamlessly connect with Microsoft Exchange Online and Google Gmail for email ticket generation and update notification.
+- Automatic ticket create and update from emails
+- Self-service customer portal
+- Single sign-on integration
+- AI-powered vector embedding search
+- Time tracking
 
 ## Demo
 
