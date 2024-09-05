@@ -476,6 +476,18 @@ export default class Ticket extends Table {
         await this.createFromEmail(email);
       });
 
+      this.packages.core.event.on("search.query", async (args) => {
+        console.log(args);
+        if (
+          args.req.user &&
+          !(await args.req.user.userHasAnyRoleName("Resolver", "Admin"))
+        ) {
+          console.log("duh");
+          args.filter = "requester:" + args.req.user.id;
+        }
+        return [args.query, args.filter];
+      });
+
       this.packages.core.event.on(
         "core.comment.recordCreate.after",
         async ({ data, req }) => {
@@ -526,11 +538,45 @@ export default class Ticket extends Table {
       this.templates.newTicketBody = await this.compileTemplate(
         path.join(__dirname, "ticket", "newTicketBody.hbs")
       );
+
+      // Is this a good implementation? Probably not.
+      // This injects the requester of the ticket into the comment for search filtering purposes.
+      // TODO how does this get updated IF the requester is changed on the ticket?
+      this.packages.core.comment.objectToSearchObject = async (object) => {
+        if (
+          (object.db =
+            "ticketing" && object.table == "ticket" && object.type == "Public")
+        ) {
+          const record = await this.packages.ticketing.ticket.recordGet({
+            recordId: object.row,
+          });
+          console.log(record);
+          return {
+            ...object,
+            requester: record.requester,
+          };
+        }
+      };
     });
   }
 
   async objectToSearchText(object) {
-    return `Subject: ${object.subject}\n${object.body}`;
+    let text = `Subject: ${object.subject}\n${object.body}`;
+
+    const records = await this.packages.core.comment.rowsGet({
+      where: {
+        row: object.id,
+        table: this.table,
+        db: this.db,
+        type: "Public",
+      },
+    });
+
+    for (const record of records.rows) {
+      text += `\n\nComment by: ${record.author_name}\n${record.body}`;
+    }
+
+    return text;
   }
 
   async ticketClose({ record }) {

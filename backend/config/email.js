@@ -9,7 +9,7 @@ export default {
       type: "Microsoft",
       name: "Microsoft",
       email: process.env.MICROSOFT_EMAIL_ADDRESS,
-      assignmentGroup: 1, // Sales // TODO change this to names and look up the ID
+      assignmentGroup: process.env.DEFAULT_EMAIL_ASSIGNMENT_GROUP || 1, // Helpdesk
       auth: {
         clientId: process.env.MICROSOFT_CLIENT_ID, // Loaded from environment
         tenantId: process.env.MICROSOFT_TENANT_ID, // Loaded from environment
@@ -21,7 +21,7 @@ export default {
       type: "Google",
       name: "Google",
       email: process.env.GOOGLE_EMAIL_ADDRESS,
-      assignmentGroup: 4, // IT Helpdesk
+      assignmentGroup: process.env.DEFAULT_EMAIL_ASSIGNMENT_GROUP || 1, // Helpdesk
       auth: {
         type: "service_account",
         project_id: process.env.GOOGLE_PROJECT_ID, // Loaded from environment
