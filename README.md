@@ -32,7 +32,7 @@ Framework Ticketing is pre-release. It is under active development and should be
 - Single sign-on integration
 - AI-powered vector embedding search
 - Time tracking
-- 
+  
 ## Install
 
 ### Getting Started
