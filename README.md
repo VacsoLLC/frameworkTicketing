@@ -4,19 +4,10 @@ Welcome to Vacso Framework Ticketing, an open-source ticketing system designed f
 
 Framework Ticketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
 
-## WARNING: Beta!
+## Demo Video
+[![Framework Ticketing Demo Video](https://github.com/user-attachments/assets/745de1c8-e4fa-47f4-87d5-a51dead9f14c)](https://www.youtube.com/watch?v=rBCl3lQ3Flc)
 
-Framework Ticketing is pre-release. It is under active development and should be used with caution.
-
-## Features
-
-- Automatic ticket create and update from emails
-- Self-service customer portal
-- Single sign-on integration
-- AI-powered vector embedding search
-- Time tracking
-
-## Demo
+## Live Demo
 
 https://demo.vacso.com
 
@@ -30,6 +21,18 @@ To create tickets via email send an email to: demo@vacso.com. Warning: your emai
 
 All outbound emails are disabled in the demo.
 
+## WARNING: Beta!
+
+Framework Ticketing is pre-release. It is under active development and should be used with caution.
+
+## Features
+
+- Automatic ticket create and update from emails
+- Self-service customer portal
+- Single sign-on integration
+- AI-powered vector embedding search
+- Time tracking
+- 
 ## Install
 
 ### Getting Started
