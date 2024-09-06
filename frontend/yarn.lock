@@ -709,10 +709,10 @@
   resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.2.0.tgz"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@vacso/frameworkfrontend@1.0.18":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@vacso/frameworkfrontend/-/frameworkfrontend-1.0.18.tgz#b3b69532c91e07b525a30f2f2fb3e6c72cb89700"
-  integrity sha512-s65TKChvPLRfyOGPamYhLC6SH39IZYxxMehqThmjFlf5SseLX7ptAseO0C8Hiw25Jq4DIRvDZFuLIVWt98Pztw==
+"@vacso/frameworkfrontend@1.0.27":
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/@vacso/frameworkfrontend/-/frameworkfrontend-1.0.27.tgz#d82f344312ae7daed00217c73cb7f8445111bdeb"
+  integrity sha512-ZN9tNgcLwUQY+VBGUTmp02l1cSl+uENWM8KHijpzu8TzfhVAN6FTKMtY2FTmQS+yI7T3YUdeYb1dSBrVye2Eig==
   dependencies:
     interweave "^13.1.0"
     jwt-decode "^4.0.0"
@@ -724,6 +724,7 @@
     react-dom "^18.3.1"
     react-router "^6.23.0"
     react-router-dom "^6.23.0"
+    suspend-react "^0.1.3"
     zustand "^4.5.2"
 
 "@vitejs/plugin-basic-ssl@^1.1.0":
@@ -2668,6 +2669,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
+
+suspend-react@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/suspend-react/-/suspend-react-0.1.3.tgz#a52f49d21cfae9a2fb70bd0c68413d3f9d90768e"
+  integrity sha512-aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ==
 
 text-table@^0.2.0:
   version "0.2.0"
