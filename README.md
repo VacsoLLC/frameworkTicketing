@@ -5,7 +5,8 @@ Welcome to Vacso Framework Ticketing, an open-source ticketing system designed f
 Framework Ticketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
 
 ## Demo Video
-[![Framework Ticketing Demo Video](https://github.com/user-attachments/assets/745de1c8-e4fa-47f4-87d5-a51dead9f14c)](https://www.youtube.com/watch?v=rBCl3lQ3Flc)
+[![Framework Ticketing Demo Video](https://github.com/user-attachments/assets/cc1cd286-e205-48c6-ad4a-2a5230a41891)](https://www.youtube.com/watch?v=zhe9Z-5WU1s)
+https://www.youtube.com/watch?v=zhe9Z-5WU1s
 
 ## Live Demo
 
