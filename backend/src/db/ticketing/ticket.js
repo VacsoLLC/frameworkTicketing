@@ -161,6 +161,18 @@ export default class Ticket extends Table {
       tabName: "Time",
     });
 
+    this.childAdd({
+      db: "core", // db name we want to make a child
+      table: "attachment", // table name we want to make a child
+      columnmap: {
+        // key is the column name in the child table, value is from the parent table. Only db, table and id are availible options at this time from the parent
+        db: "db",
+        table: "table",
+        row: "id",
+      },
+      tabName: "Attachments",
+    });
+
     this.columnAdd({
       columnName: "emailConversationId",
       friendlyName: "Email Conversation Id",
@@ -406,6 +418,11 @@ export default class Ticket extends Table {
           required: false,
         },
       },
+    });
+
+    this.actionAdd({
+      label: "Attach File(s)",
+      type: "attach",
     });
 
     // Special role for who can be assigned a ticket
