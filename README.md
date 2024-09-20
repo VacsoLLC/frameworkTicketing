@@ -185,7 +185,8 @@ To develop you'll need to:
 - in frameworkBackend run "yarn install" and "yarn link"
 - in framworkFrontend run "yarn install" and "yarn link"
 - In framworkTicketing/frontend run "yarn install" and "yarn link @vacso/frameworkFrontend"
-- In frameworkTicketing/backend run "yarn install" and "yarn link @vacso/frameworkBackend".
+- In frameworkTicketing/backend run "yarn install" and "yarn link @vacso/frameworkBackend". Also generate the .env file here using the powershell or shell script in that directory
+- In the frameworkTicketing/docker container, startup just the mariadb container with docker-compose up -d mariadb
 
 This should give you a development enviorment where you can make changes and test any of the 3 packages.
 
@@ -227,6 +228,10 @@ marqo is needed for search but uses a lot of ram, cpu and downloads gigs on firs
 cd docker
 docker compose up marqo -d
 ```
+
+In vscode, go to the "Run and Debug" tab and click play on the "Everything" option. This starts up Vite, Node and a Chrome browser to debug in.
+
+To login to the app, use the username admin and the password from the .env file.
 
 ## Support
 
