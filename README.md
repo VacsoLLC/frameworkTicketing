@@ -5,6 +5,7 @@ Welcome to Vacso Framework Ticketing, an open-source ticketing system designed f
 Framework Ticketing is an application built on top of frameworkBackend and frameworkFrontend. Framework is designed for you to build internal enterprise applications quickly and easily.
 
 ## Demo Video
+
 [![Framework Ticketing Demo Video](https://github.com/user-attachments/assets/cc1cd286-e205-48c6-ad4a-2a5230a41891)](https://www.youtube.com/watch?v=zhe9Z-5WU1s)
 https://www.youtube.com/watch?v=zhe9Z-5WU1s
 
@@ -33,7 +34,7 @@ Framework Ticketing is pre-release. It is under active development and should be
 - Single sign-on integration
 - AI-powered vector embedding search
 - Time tracking
-  
+
 ## Install
 
 ### Getting Started
@@ -175,7 +176,7 @@ Supported. Instructions coming soon.
 
 ## Contributing
 
-Vacso Framework Ticketing is an open-source project, and we welcome contributions from the community. 
+Vacso Framework Ticketing is an open-source project, and we welcome contributions from the community.
 
 To develop you'll need to:
 
@@ -183,10 +184,49 @@ To develop you'll need to:
 - Then use "Open workspace from file" in VS Code to open frameworkTicketing/framework.code-workspace.
 - in frameworkBackend run "yarn install" and "yarn link"
 - in framworkFrontend run "yarn install" and "yarn link"
-- In framworkTicketing/frontend run "yarn link @vacso/frameworkFrontend", and "yarn install"
-- In frameworkTicketing/backend run "yarn link @vacso/frameworkBackend", and "yarn install".
+- In framworkTicketing/frontend run "yarn install" and "yarn link @vacso/frameworkFrontend"
+- In frameworkTicketing/backend run "yarn install" and "yarn link @vacso/frameworkBackend".
 
 This should give you a development enviorment where you can make changes and test any of the 3 packages.
+
+On windows you can just copy and paste this into a command prompt assuming you have git, yarn, docker desktop and vscode installed.
+
+```
+mkdir framework
+cd framework
+git clone https://github.com/VacsoLLC/frameworkTicketing.git
+git clone https://github.com/VacsoLLC/frameworkBackend.git
+git clone https://github.com/VacsoLLC/frameworkFrontend.git
+cd frameworkBackend
+yarn install
+yarn link
+cd ..
+cd frameworkFrontend
+yarn install
+yarn link
+cd ..
+cd frameworkTicketing
+cd backend
+yarn install
+yarn link @vacso/frameworkBackend
+powershell -f generate_env.ps1
+cd ..
+cd frontend
+yarn install
+yarn link @vacso/frameworkFrontend
+cd ..
+cd docker
+docker compose up mariadb -d
+cd ..
+code .
+```
+
+marqo is needed for search but uses a lot of ram, cpu and downloads gigs on first startup. So only start it if you're developing around search:
+
+```
+cd docker
+docker compose up marqo -d
+```
 
 ## Support
 
