@@ -235,6 +235,28 @@ In vscode, go to the "Run and Debug" tab and click play on the "Everything" opti
 
 To login to the app, use the username admin and the password from the .env file.
 
+## Troubleshooting first start
+
+If you are having any problems with the backend reaching the database, you can do the following (This deletes all data in your database!)
+
+```
+# Go to framework ticketing docker directory
+cd framworkTicketing/docker
+# Shut down and destroy MariaDB conatiner
+docker compose down MariaDB
+# delete all data for MariaDB. WARNING: this wipes all your data in MariaDB!
+rm ./data/mariadb
+# Start the maraidb container back up... give it 10 seconds to start and create the database and user.
+docker compose up mariadb -d
+# Make sure its up and running
+docker ps
+# This prints the password for the framework user
+docker exec -i -t docker-mariadb-1 bash -c "export | grep MARIADB_PASSWORD" 
+# copy/paste the password after running this
+docker exec -i -t docker-mariadb-1 mariadb -u framework -p
+# If you got a "MariaDB[(none)]>" prompt, its working
+```
+
 ## Support
 
 If you encounter any issues or have questions regarding the Vacso Framework Ticketing, please file an issue on our [GitHub repository](https://github.com/vacsollc/framework/issues).
