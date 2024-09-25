@@ -221,7 +221,7 @@ cd ..
 cd docker
 docker compose up mariadb -d
 cd ..
-code .
+code framework.code-workspace
 ```
 
 marqo is needed for search but uses a lot of ram, cpu and downloads gigs on first startup. So only start it if you're developing around search:
