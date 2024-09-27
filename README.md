@@ -39,7 +39,7 @@ Framework Ticketing is pre-release. It is under active development and should be
 
 ### Getting Started
 
-STOP! If you are going to contribute to the development of frameworkTicketing or its components, please skip to the contributing section.
+**STOP!** If you are going to contribute to the development of frameworkTicketing or its components, please skip to the contributing section.
 
 To begin using the Vacso Framework Ticketing, follow these steps:
 
