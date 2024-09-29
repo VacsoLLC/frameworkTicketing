@@ -30,7 +30,11 @@ services:
       - ./data/frontend/dist:/frontend/dist
       - ./data/backend/node_modules:/app/node_modules
       - ./data/frontend/node_modules:/frontend/node_modules
-    command: sh -c "node --version && cd /frontend && yarn install && yarn run build && cd /app && yarn install && yarn run indocker"
+    command:  >
+      sh -c "
+        (node --version && cd /frontend && yarn install && yarn run build) &
+        (cd /app && yarn install && yarn run indocker) &
+        wait"
     env_file: ../backend/.env
     environment:    
       MARIADB_HOST: mariadb
@@ -96,7 +100,7 @@ services:
     ports:
       - '8882:8882'
     volumes:
-      - ./data/margo:/opt/vespa/var
+      - ./data/marqo:/opt/vespa/var
     logging:
       driver: "json-file"
       options:
