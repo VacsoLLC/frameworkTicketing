@@ -15,7 +15,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@vacso/frameworkbackend": "1.0.27",
+    "@vacso/frameworkbackend": "1.0.28",
     "bcrypt": "^5.1.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
