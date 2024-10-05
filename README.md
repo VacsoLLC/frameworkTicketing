@@ -15,8 +15,8 @@ https://demo.vacso.com
 
 | Demo Username       | Demo Password                                |
 | ------------------- | -------------------------------------------- |
-| admin               | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
-| resolver@vacso.com  | zHZcLVvOix1xHhpKpIy3XjhBxKo7bpx9FuO+HjSrU7U= |
+| admin               | cqo3exSuvwx8mxqeKtltdbLWYrWS6WO3XdXJeP5w3Ik= |
+| resolver@vacso.com  | cqo3exSuvwx8mxqeKtltdbLWYrWS6WO3XdXJeP5w3Ik= |
 | requester@vacso.com | Vacso123!                                    |
 
 To create tickets via email send an email to: demo@vacso.com. Warning: your email address will be added to the system for others to see. Use a burner account.
