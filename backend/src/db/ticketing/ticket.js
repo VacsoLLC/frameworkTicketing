@@ -203,14 +203,14 @@ export default class Ticket extends Table {
       label: "Tickets",
       view: null,
       order: 1,
-      icon: "pi-ticket",
+      icon: "Ticket",
       roles: ["Resolver", "Admin"],
     });
 
     this.addMenuItem({
       label: "All Tickets",
       parent: "Tickets",
-      icon: "pi-list",
+      icon: "List",
       order: 99,
       roles: ["Resolver", "Admin"],
     });
@@ -221,7 +221,7 @@ export default class Ticket extends Table {
       filter: (req) => {
         return [{ assignedTo: req.user?.id }, ["status", "!=", "Closed"]];
       },
-      icon: "pi-user",
+      icon: "User",
       order: 1,
       roles: ["Resolver", "Admin"],
     });
@@ -242,7 +242,7 @@ export default class Ticket extends Table {
       filter: (req) => {
         return [["group", "IN", req.user?.groups]];
       },
-      icon: "pi-users",
+      icon: "Users",
       order: 2,
       roles: ["Resolver", "Admin"],
     });
