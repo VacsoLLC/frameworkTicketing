@@ -31,7 +31,8 @@ Framework Ticketing is pre-release. It is under active development and should be
 
 - Automatic ticket create and update from emails
 - Self-service customer portal
-- Single sign-on integration
+- Single sign-on integration (SAML)
+- User sync from external directory (Microsoft 365/Entra)
 - AI-powered vector embedding search
 - Time tracking
 
@@ -136,8 +137,9 @@ Create a shared mailbox in Microsoft Exchange to be used for sending and recievi
 1. Search for "Mail"
 1. Expand the section called "Mail"
 1. Check the box next to all 5 permissions in the "Mail" section including "Mail.Read" and "Mail.Send"
+1. NOTE: If you want to sync users from Microsoft 365, you'll need to add the "Directory.Read.All" permission as well. See the "Setup User Sync" section.
 1. Click "Add permissions"
-1. At the top of the list of permissions, click "Grant admin consent for Vacso"
+1. At the top of the list of permissions, click "Grant admin consent for..." button.
 1. Click "Yes" confirm you want to grant admin consent.
 1. Go ot the "Overview" tab of the app registration.
 1. Copy the Application (client) ID and Directory (tenant) ID into your env file.
@@ -151,6 +153,16 @@ This API client id will have access to all mailboxes in Microsoft Exchange. To r
 #### Google
 
 Supported. Instructions coming soon.
+
+### Setup User Sync
+
+The user sync uses the Microsoft Graph API to sync users from your Microsoft 365/Entra tenant into frameworkTicketing.
+
+To configure the sync, you'll need to setup an Enterprise Application and App registration, as sepcified in the email setup (You can use the same App registration as the one used for the email setup).
+
+You must give the "App Registration" the "Directory.Read.All" permission. Don't forget to hit the "Grant admin conset for..." button.
+
+By default the config file uses the same enviorment varaibles for the Microsoft Graph API as the email setup. If you want to use a different App registration, you'll need to update the config file.
 
 ### Setup Single Sign On via SAML
 
@@ -251,7 +263,7 @@ docker compose up mariadb -d
 # Make sure its up and running
 docker ps
 # This prints the password for the framework user
-docker exec -i -t docker-mariadb-1 bash -c "export | grep MARIADB_PASSWORD" 
+docker exec -i -t docker-mariadb-1 bash -c "export | grep MARIADB_PASSWORD"
 # copy/paste the password after running this
 docker exec -i -t docker-mariadb-1 mariadb -u framework -p
 # If you got a "MariaDB[(none)]>" prompt, its working
