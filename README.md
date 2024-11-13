@@ -164,6 +164,10 @@ You must give the "App Registration" the "Directory.Read.All" permission. Don't 
 
 By default the config file uses the same enviorment varaibles for the Microsoft Graph API as the email setup. If you want to use a different App registration, you'll need to update the config file.
 
+Make sure the the enviorment varaible SYNC_USERS= is set to 1. See the env.example file.
+
+Users are synced every 6 hours. To force a user sync, you can access the following URL (Login to frontend first): /core/usersync/action/sync/1
+
 ### Setup Single Sign On via SAML
 
 #### Microsoft
