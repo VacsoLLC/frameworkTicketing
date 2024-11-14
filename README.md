@@ -190,6 +190,35 @@ Users are synced every 6 hours. To force a user sync, you can access the followi
 
 Supported. Instructions coming soon.
 
+## Inbound call web pops
+
+To use inbound call web pops, have your phone system launch the following webpage when a call comes in: https://<yourdomain>/core/user/action/findUserByPhoneNumber/<phone number>.
+
+Framework will look up that phone number exactly. If a match is found, you will be forwarded to that user's user record.
+
+To configure this in Microsoft Teams Phone:
+
+1. Go to https://www.microsoft365.com/, login as a 365 admin, and click "Admin" icon on the left hand side.
+1. Click "... Show All" in the left hand menu.
+1. In "Admin centers" click "Teams"
+1. Inside the teams console, expand the "Voice" menu
+1. Click "Calling Policies"
+1. To configure for everyone, click "Global (Org-wide default)"
+1. Near the bottom of the policy, find "Open apps in browser for incoming PSTN calls" and turn it on.
+1. Find "URL to open apps in browser for incoming PSTN calls" in the policy. Enter in the URL https://<yourdomain>/core/user/action/findUserByPhoneNumber/{phone}.
+1. Click "Save"
+1. Every user must enable the option in thier settings. 
+1. In the teams client for Windows, click the 3 horizontal dots in the top right, then click "Settings"
+1. Click "Calls"
+1. Under "Open apps in browser" it says "Allow third party apps to automatically open in a new browser window for incoming PSTN calls.", move the slider so it is on.
+
+Go more information, see: 
+
+1. Admin setup: https://learn.microsoft.com/en-us/microsoftteams/inbound-call-routing
+1. User setup: https://support.microsoft.com/en-us/office/manage-your-call-settings-in-microsoft-teams-456cb611-3477-496f-b31a-6ab752a7595f
+
+
+
 ## Documentation
 
 ## Contributing
