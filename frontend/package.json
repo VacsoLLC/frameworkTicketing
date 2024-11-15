@@ -14,9 +14,11 @@
     "@vacso/frameworkfrontend": "1.0.31",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
+    "autoprefixer": "^10.4.20",
     "chart.js": "^4.4.2",
     "interweave": "^13.1.0",
     "jwt-decode": "^4.0.0",
+    "postcss": "^8.4.49",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
     "primereact": "^10.6.5",
@@ -26,6 +28,7 @@
     "react-dom": "^18.3.0",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
+    "tailwindcss": "^3.4.15",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

@@ -95,12 +95,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro  
     entrypoint: ["sh", "-c", "/app/entrypoint.sh"]
   marqo:
-    image: marqoai/marqo:latest
+    image: marqoai/marqo:2.12
     restart: always
     ports:
       - '8882:8882'
-    volumes:
-      - ./data/marqo:/opt/vespa/var
+    #volumes:
+    #  - ./data/marqo:/opt/vespa/var
     logging:
       driver: "json-file"
       options:
