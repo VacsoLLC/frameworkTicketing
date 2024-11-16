@@ -19,6 +19,7 @@ export default {
     "./app/**/*.{js,jsx}",
 
     "./src/**/*.{js,jsx}",
+
     path.join(
       path.dirname(require.resolve("@vacso/frameworkFrontend")),
       "src/**/*.{js,jsx}"

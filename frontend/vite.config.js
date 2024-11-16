@@ -24,6 +24,8 @@ export default defineConfig({
       "zustand",
       "interweave",
       "react-router-dom",
+      "react-router",
+      "nuqs",
     ],
   },
 
