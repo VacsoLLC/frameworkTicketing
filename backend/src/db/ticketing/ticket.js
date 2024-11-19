@@ -423,6 +423,7 @@ export default class Ticket extends Table {
     this.actionAdd({
       label: "Attach File(s)",
       type: "attach",
+      disabled: this.ticketOpen,
     });
 
     // Special role for who can be assigned a ticket
