@@ -17,16 +17,7 @@ export default defineConfig({
     dedupe: ["react", "react-dom"],
   },
   optimizeDeps: {
-    include: [
-      "react",
-      "prop-types",
-      "react-dom",
-      "zustand",
-      "interweave",
-      "react-router-dom",
-      "react-router",
-      "nuqs",
-    ],
+    include: ["react", "prop-types", "react-dom", "zustand", "interweave"],
   },
 
   server: {
