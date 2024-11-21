@@ -207,17 +207,15 @@ To configure this in Microsoft Teams Phone:
 1. Near the bottom of the policy, find "Open apps in browser for incoming PSTN calls" and turn it on.
 1. Find "URL to open apps in browser for incoming PSTN calls" in the policy. Enter in the URL https://<yourdomain>/core/user/action/findUserByPhoneNumber/{phone}.
 1. Click "Save"
-1. Every user must enable the option in thier settings. 
+1. Every user must enable the option in thier settings.
 1. In the teams client for Windows, click the 3 horizontal dots in the top right, then click "Settings"
 1. Click "Calls"
 1. Under "Open apps in browser" it says "Allow third party apps to automatically open in a new browser window for incoming PSTN calls.", move the slider so it is on.
 
-Go more information, see: 
+Go more information, see:
 
 1. Admin setup: https://learn.microsoft.com/en-us/microsoftteams/inbound-call-routing
 1. User setup: https://support.microsoft.com/en-us/office/manage-your-call-settings-in-microsoft-teams-456cb611-3477-496f-b31a-6ab752a7595f
-
-
 
 ## Documentation
 
@@ -232,10 +230,15 @@ To develop you'll need to:
 - in frameworkBackend run "yarn install" and "yarn link"
 - in framworkFrontend run "yarn install" and "yarn link"
 - In framworkTicketing/frontend run "yarn install" and "yarn link @vacso/frameworkFrontend"
-- In frameworkTicketing/backend run "yarn install" and "yarn link @vacso/frameworkBackend". Also generate the .env file here using the powershell or shell script in that directory
+- In frameworkTicketing/backend run "yarn install" and "yarn link @vacso/frameworkBackend".
+- In frameworkTicketing/backend generate the .env file here using the powershell or shell script in that directory
 - In the frameworkTicketing/docker container, startup just the mariadb container with docker-compose up -d mariadb
 
 This should give you a development enviorment where you can make changes and test any of the 3 packages.
+
+In vscode, go to the "Run and Debug" tab and click play on the "Run Node, Vite & Chrome" option. This starts up Vite, Node and a Chrome browser to debug in.
+
+To login to the app, use the username admin and the password from the .env file. The env file can be found in frameworkTicketing/backend.
 
 On windows you can just copy and paste this into a command prompt assuming you have git, yarn, docker desktop and vscode installed.
 
@@ -275,10 +278,6 @@ marqo is needed for search but uses a lot of ram, cpu and downloads gigs on firs
 cd docker
 docker compose up marqo -d
 ```
-
-In vscode, go to the "Run and Debug" tab and click play on the "Everything" option. This starts up Vite, Node and a Chrome browser to debug in.
-
-To login to the app, use the username admin and the password from the .env file.
 
 ## Troubleshooting first start
 
