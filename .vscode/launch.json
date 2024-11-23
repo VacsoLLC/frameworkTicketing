@@ -4,24 +4,6 @@
   "runtimeArgs": ["--preserve-symlinks"],
   "configurations": [
     {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Chrome",
-      "url": "https://localhost:5173",
-      "webRoot": "${workspaceFolder}",
-      "trace": true,
-      "sourceMaps": true,
-      "perScriptSourcemaps": "yes",
-      "pathMapping": {
-        "/@fs/C:/": "C:/",
-        "/@fs/D:/": "D:/",
-        "/@fs/E:/": "E:/",
-        "/@fs/F:/": "F:/",
-        "/@fs": "",
-        "/": "${workspaceFolder}"
-      }
-    },
-    {
       "type": "node",
       "request": "launch",
       "name": "Node",
@@ -37,6 +19,25 @@
       "runtimeExecutable": "npm",
       "cwd": "${workspaceFolder}/frontend",
       "runtimeArgs": ["run", "dev", "--preserve-symlinks"]
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Chrome",
+      "url": "https://localhost:5173",
+      "webRoot": "${workspaceFolder}",
+      "trace": true,
+      "sourceMaps": true,
+      "perScriptSourcemaps": "yes",
+      "pathMapping": {
+        "/@fs/C:/": "C:/",
+        "/@fs/D:/": "D:/",
+        "/@fs/E:/": "E:/",
+        "/@fs/F:/": "F:/",
+        "/@fs": "",
+        "/src": "${workspaceFolder}/frontend/src",
+        "/": "${workspaceFolder}"
+      }
     },
     {
       "type": "node",
