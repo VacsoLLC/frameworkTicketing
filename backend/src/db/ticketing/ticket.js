@@ -505,6 +505,14 @@ export default class Ticket extends Table {
         }
         return [args.query, args.filter];
       });
+      this.packages.core.event.on(
+        "core.user.createTicketForUser",
+        async({data, req}) => {
+          await this.recordCreate({
+            data,
+            req
+        })
+      });
 
       this.packages.core.event.on(
         "core.comment.recordCreate.after",
