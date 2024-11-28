@@ -505,6 +505,25 @@ export default class Ticket extends Table {
         }
         return [args.query, args.filter];
       });
+
+      this.packages.core.user.actionAdd({
+        label: 'Create Ticket for User',
+        method: 'createTicketForUser',
+        rolesExecute: ['Admin', 'Authenticated'],
+        inputs: {
+          ticketTitle: {
+            required: true,
+            fieldType: 'string',
+            friendlyName: 'Subject',
+          },
+          ticketDescription: {
+            required: false,
+            friendlyName: 'Body',
+            fieldType: 'text',
+          },
+        },
+      })
+      
       this.packages.core.event.on(
         "core.user.createTicketForUser",
         async({data, req}) => {
