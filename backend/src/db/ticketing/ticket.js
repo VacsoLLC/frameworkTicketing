@@ -508,7 +508,7 @@ export default class Ticket extends Table {
 
       this.packages.core.user.actionAdd({
         label: 'Create Ticket for User',
-        method: 'createTicketForUser',
+        method: this.createTicketForUser,
         rolesExecute: ['Admin', 'Authenticated'],
         inputs: {
           ticketTitle: {
@@ -975,6 +975,20 @@ export default class Ticket extends Table {
       },
     });
   }
+
+  async createTicketForUser({ recordId, ticketTitle, ticketDescription, req }) {
+    this.packages.ticketing.ticket.recordCreate(
+      {
+        data:{
+          subject: ticketTitle,
+          body: ticketDescription,
+          requester: recordId,
+          assignedTo: recordId,
+        },
+        req
+      })
+  }
+
 
   async compileTemplate(filePath) {
     return new Promise((resolve, reject) => {
