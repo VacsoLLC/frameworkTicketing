@@ -4,25 +4,25 @@ import {
   systemUser,
   elevateUser,
   systemRequest,
-} from "@vacso/frameworkbackend";
+} from '@vacso/frameworkbackend';
 
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
-import Handlebars from "handlebars";
+import path from 'path';
+import {fileURLToPath} from 'url';
+import fs from 'fs';
+import Handlebars from 'handlebars';
 
 export default class Ticket extends Table {
   constructor(args) {
-    super({ name: "Ticket", className: "ticket", ...args });
+    super({name: 'Ticket', className: 'ticket', ...args});
 
-    this.rolesWriteAdd("Resolver", "Admin");
-    this.rolesReadAdd("Authenticated");
-    this.rolesDeleteAdd("Admin");
+    this.rolesWriteAdd('Resolver', 'Admin');
+    this.rolesReadAdd('Authenticated');
+    this.rolesDeleteAdd('Admin');
 
     this.columnAdd({
-      columnName: "created",
-      friendlyName: "Created",
-      columnType: "datetime",
+      columnName: 'created',
+      friendlyName: 'Created',
+      columnType: 'datetime',
       hiddenCreate: true,
       readOnly: true,
       onCreate: () => {
@@ -31,313 +31,312 @@ export default class Ticket extends Table {
     });
 
     this.manyToOneAdd({
-      columnName: "requester",
-      helpText: "User who requested the ticket",
-      rolesWrite: ["Resolver", "Admin"],
-      rolesRead: ["Authenticated"],
-      referencedTableName: "user",
-      referencedDb: "core",
+      columnName: 'requester',
+      helpText: 'User who requested the ticket',
+      rolesWrite: ['Resolver', 'Admin'],
+      rolesRead: ['Authenticated'],
+      referencedTableName: 'user',
+      referencedDb: 'core',
       referenceCreate: true,
       displayColumns: [
         {
-          columnName: "name",
-          friendlyName: "Requester",
+          columnName: 'name',
+          friendlyName: 'Requester',
         },
       ],
 
-      tabName: "Tickets Opened",
-      defaultValue: async ({ req }) => {
+      tabName: 'Tickets Opened',
+      defaultValue: async ({req}) => {
         return req.user.id;
       },
       index: true,
     });
 
     this.columnAdd({
-      columnName: "subject",
-      friendlyName: "Subject",
-      columnType: "string",
+      columnName: 'subject',
+      friendlyName: 'Subject',
+      columnType: 'string',
       index: true,
       required: true,
-      helpText: "Subject or Title of the ticket",
-      rolesCreate: ["Authenticated"],
+      helpText: 'Subject or Title of the ticket',
+      rolesCreate: ['Authenticated'],
       validations: [
-        ({ value }) => {
+        ({value}) => {
           if (value?.length < 1) {
-            return "Subject must be at least 1 characters long.";
+            return 'Subject must be at least 1 characters long.';
           }
         },
       ],
     });
 
     this.columnAdd({
-      columnName: "body",
-      friendlyName: "Body",
-      columnType: "text",
+      columnName: 'body',
+      friendlyName: 'Body',
+      columnType: 'text',
       index: true,
-      helpText: "Body of the ticket",
-      rolesCreate: ["Authenticated"],
+      helpText: 'Body of the ticket',
+      rolesCreate: ['Authenticated'],
     });
 
     this.manyToOneAdd({
-      columnName: "group",
-      helpText: "Group the ticket is assigned to",
-      rolesWrite: ["Resolver", "Admin"],
-      rolesRead: ["Resolver", "Admin", "Authenticated"],
-      referencedTableName: "group",
-      referencedDb: "core",
+      columnName: 'group',
+      helpText: 'Group the ticket is assigned to',
+      rolesWrite: ['Resolver', 'Admin'],
+      rolesRead: ['Resolver', 'Admin', 'Authenticated'],
+      referencedTableName: 'group',
+      referencedDb: 'core',
       displayColumns: [
         {
-          columnName: "name",
-          friendlyName: "Group",
+          columnName: 'name',
+          friendlyName: 'Group',
         },
       ],
-      tabName: "Tickets Assigned",
+      tabName: 'Tickets Assigned',
       index: true,
     });
 
     // Example usage with custom column name and displayColumns (though displayColumns isn't directly utilized in schema creation)
     this.manyToOneAdd({
-      columnName: "assignedTo",
-      helpText: "User the ticket is assigned to",
-      rolesWrite: ["Resolver", "Admin"],
-      rolesRead: ["Resolver", "Admin", "Authenticated"],
-      referencedTableName: "user",
-      referencedDb: "core",
-      queryModifier: "ticketing.ticket.resolver",
+      columnName: 'assignedTo',
+      helpText: 'User the ticket is assigned to',
+      rolesWrite: ['Resolver', 'Admin'],
+      rolesRead: ['Resolver', 'Admin', 'Authenticated'],
+      referencedTableName: 'user',
+      referencedDb: 'core',
+      queryModifier: 'ticketing.ticket.resolver',
       displayColumns: [
         {
-          columnName: "name",
-          friendlyName: "Assigned To",
+          columnName: 'name',
+          friendlyName: 'Assigned To',
         },
       ],
 
-      tabName: "Tickets Assigned",
-      defaultValue: async ({ req }) => {
-        if (await req.user.userHasAnyRoleName("Resolver")) {
+      tabName: 'Tickets Assigned',
+      defaultValue: async ({req}) => {
+        if (await req.user.userHasAnyRoleName('Resolver')) {
           return req.user.id;
         } else {
-          return "";
+          return '';
         }
       },
       index: true,
     });
 
     this.columnAdd({
-      columnName: "status",
-      friendlyName: "Status",
-      rolesWrite: ["Resolver", "Admin"],
-      rolesRead: ["Resolver", "Admin", "Authenticated"],
+      columnName: 'status',
+      friendlyName: 'Status',
+      rolesWrite: ['Resolver', 'Admin'],
+      rolesRead: ['Resolver', 'Admin', 'Authenticated'],
       //columnType: 'string',
       index: true,
-      helpText: "Status of the ticket",
-      defaultValue: "Open",
-      fieldType: "select",
-      options: ["Open", "Closed", "Pending Feedback", "Feedback Received"],
+      helpText: 'Status of the ticket',
+      defaultValue: 'Open',
+      fieldType: 'select',
+      options: ['Open', 'Closed', 'Pending Feedback', 'Feedback Received'],
     });
 
     // TODO: document this use case... comment is a generic table that can be reused... manyToOneAdd should be used when ever possible, and it automatically calls add child
     // TODO: build a better fucntion for this...
     this.childAdd({
-      db: "core", // db name we want to make a child
-      table: "comment", // table name we want to make a child
+      db: 'core', // db name we want to make a child
+      table: 'comment', // table name we want to make a child
       columnmap: {
         // key is the column name in the child table, value is from the parent table. Only db, table and id are availible options at this time from the parent
-        db: "db",
-        table: "table",
-        row: "id",
+        db: 'db',
+        table: 'table',
+        row: 'id',
       },
-      tabName: "Comments",
+      tabName: 'Comments',
     });
 
     this.childAdd({
-      db: "core", // db name we want to make a child
-      table: "time", // table name we want to make a child
+      db: 'core', // db name we want to make a child
+      table: 'time', // table name we want to make a child
       columnmap: {
         // key is the column name in the child table, value is from the parent table. Only db, table and id are availible options at this time from the parent
-        db: "db",
-        table: "table",
-        row: "id",
+        db: 'db',
+        table: 'table',
+        row: 'id',
       },
-      tabName: "Time",
+      tabName: 'Time',
     });
 
     this.childAdd({
-      db: "core", // db name we want to make a child
-      table: "attachment", // table name we want to make a child
+      db: 'core', // db name we want to make a child
+      table: 'attachment', // table name we want to make a child
       columnmap: {
         // key is the column name in the child table, value is from the parent table. Only db, table and id are availible options at this time from the parent
-        db: "db",
-        table: "table",
-        row: "id",
+        db: 'db',
+        table: 'table',
+        row: 'id',
       },
-      tabName: "Attachments",
+      tabName: 'Attachments',
     });
 
     this.columnAdd({
-      columnName: "emailConversationId",
-      friendlyName: "Email Conversation Id",
-      columnType: "string",
+      columnName: 'emailConversationId',
+      friendlyName: 'Email Conversation Id',
+      columnType: 'string',
       index: true,
       hidden: true,
-      helpText: "Used to map incoming emails to tickets.",
+      helpText: 'Used to map incoming emails to tickets.',
     });
 
     this.columnAdd({
-      columnName: "emailId",
-      friendlyName: "Email ID",
-      columnType: "string",
+      columnName: 'emailId',
+      friendlyName: 'Email ID',
+      columnType: 'string',
       index: true,
       hidden: true,
-      helpText: "ID of last email receieved. Used to send replies.",
+      helpText: 'ID of last email receieved. Used to send replies.',
     });
 
     this.columnAdd({
-      columnName: "emailProvider",
-      friendlyName: "Email Provider",
-      columnType: "string",
+      columnName: 'emailProvider',
+      friendlyName: 'Email Provider',
+      columnType: 'string',
       hidden: true,
-      helpText: "The email provider being used to communicate with the user.",
+      helpText: 'The email provider being used to communicate with the user.',
     });
 
     this.addMenuItem({
-      label: "Tickets",
+      label: 'Tickets',
       view: null,
       order: 1,
-      icon: "Ticket",
-      roles: ["Resolver", "Admin"],
+      icon: 'Ticket',
+      roles: ['Resolver', 'Admin'],
     });
 
     this.addMenuItem({
-      label: "All Tickets",
-      parent: "Tickets",
-      icon: "List",
+      label: 'All Tickets',
+      parent: 'Tickets',
+      icon: 'List',
       order: 99,
-      roles: ["Resolver", "Admin"],
+      roles: ['Resolver', 'Admin'],
     });
 
     this.addMenuItem({
-      label: "My Tickets",
-      parent: "Tickets",
+      label: 'My Tickets',
+      parent: 'Tickets',
       filter: (req) => {
-        return [{ assignedTo: req.user?.id }, ["status", "!=", "Closed"]];
+        return [{assignedTo: req.user?.id}, ['status', '!=', 'Closed']];
       },
-      icon: "User",
+      icon: 'User',
       order: 1,
-      roles: ["Resolver", "Admin"],
+      roles: ['Resolver', 'Admin'],
     });
 
     this.addMenuItem({
-      label: "My Tickets",
-      rolesHide: ["Resolver", "Admin"],
+      label: 'My Tickets',
+      rolesHide: ['Resolver', 'Admin'],
     });
 
     this.addMenuItem({
-      label: "Create Ticket",
-      navigate: "/ticketing/ticket/create",
+      label: 'Create Ticket',
+      navigate: '/ticketing/ticket/create',
     });
 
     this.addMenuItem({
       label: "My Group's Tickets",
-      parent: "Tickets",
+      parent: 'Tickets',
       filter: (req) => {
-        return [["group", "IN", req.user?.groups]];
+        return [['group', 'IN', req.user?.groups]];
       },
-      icon: "Users",
+      icon: 'Users',
       order: 2,
-      roles: ["Resolver", "Admin"],
+      roles: ['Resolver', 'Admin'],
     });
 
     // Requesters can only see their own tickets
     this.addAccessFilter(async (user, query) => {
-      if (user && !(await user.userHasAnyRoleName("Resolver", "Admin"))) {
-        query.where("requester", user.id);
+      if (user && !(await user.userHasAnyRoleName('Resolver', 'Admin'))) {
+        query.where('requester', user.id);
       }
       return [query];
     });
 
     this.actionAdd({
-      label: "Assign to Me",
-      method: "assignToMe",
-      verify: "Assign this ticket to yourself?",
-      helpText: "Assign this ticket to yourself.",
-      rolesExecute: ["Resolver", "Admin"],
+      label: 'Assign to Me',
+      method: this.assignToMe,
+      verify: 'Assign this ticket to yourself?',
+      helpText: 'Assign this ticket to yourself.',
+      rolesExecute: ['Resolver', 'Admin'],
       disabled: this.ticketOpen,
     });
 
     this.actionAdd({
-      label: "Request Feedback",
-      method: "requestFeedback",
-      helpText: "Request feedback from the user.",
-      rolesExecute: ["Resolver", "Admin"],
+      label: 'Request Feedback',
+      method: this.requestFeedback,
+      helpText: 'Request feedback from the user.',
+      rolesExecute: ['Resolver', 'Admin'],
       disabled: this.ticketOpen,
       verify:
         'Provide a commment to the user requesting additional information. The comment will be sent to the user and the ticket will be updated to "Feedback Requested" status.',
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
         Minutes: {
-          fieldType: "number",
+          fieldType: 'number',
           required: false,
         },
       },
     });
 
     this.actionAdd({
-      label: "Public Update",
-      method: "publicUpdate",
-      rolesExecute: ["Resolver", "Admin"],
-      verify: "The comment will be sent to the user.",
-      helpText: "Add a public comment to the ticket.",
+      label: 'Public Update',
+      method: this.publicUpdate,
+      rolesExecute: ['Resolver', 'Admin'],
+      verify: 'The comment will be sent to the user.',
+      helpText: 'Add a public comment to the ticket.',
       disabled: this.ticketOpen,
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
         Minutes: {
-          fieldType: "number",
+          fieldType: 'number',
           required: false,
         },
       },
     });
 
     this.actionAdd({
-      label: "Private Update",
-      method: "privateUpdate",
-      rolesExecute: ["Resolver", "Admin"],
-      verify: "The comment will not be sent to the user.",
-      helpText: "Add a private comment to the ticket.",
+      label: 'Private Update',
+      method: this.privateUpdate,
+      rolesExecute: ['Resolver', 'Admin'],
+      verify: 'The comment will not be sent to the user.',
+      helpText: 'Add a private comment to the ticket.',
       disabled: this.ticketOpen,
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
         Minutes: {
-          fieldType: "number",
+          fieldType: 'number',
           required: false,
         },
       },
     });
 
     this.actionAdd({
-      label: "Time Entry",
-      //method: "timeEntry",
+      label: 'Time Entry',
       method: this.timeEntry,
-      rolesExecute: ["Resolver", "Admin"],
-      verify: "Add a time entry to this ticket? Time is entered in minutes.",
-      helpText: "Add a time entry to this ticket.",
+      rolesExecute: ['Resolver', 'Admin'],
+      verify: 'Add a time entry to this ticket? Time is entered in minutes.',
+      helpText: 'Add a time entry to this ticket.',
       disabled: this.ticketOpen,
       inputs: {
         Minutes: {
-          fieldType: "number",
+          fieldType: 'number',
           required: true,
           validations: [
-            ({ value }) => {
+            ({value}) => {
               if (isNaN(value) || value < 1) {
-                return "Minutes must be greater than 0.";
+                return 'Minutes must be greater than 0.';
               }
             },
           ],
@@ -346,21 +345,21 @@ export default class Ticket extends Table {
     });
 
     this.actionAdd({
-      label: "Close Ticket",
-      id: "CloseTicketResolver",
-      method: "closeTicket",
-      helpText: "Close this ticket.",
+      label: 'Close Ticket',
+      id: 'CloseTicketResolver',
+      method: this.closeTicket,
+      helpText: 'Close this ticket.',
       verify:
-        "Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.",
+        'Provide a commment to the user explaining why the ticket is being closed. The comment will be sent to the user and the ticket will be updated to closed status.',
       disabled: this.ticketOpen,
-      rolesExecute: ["Resolver", "Admin"],
+      rolesExecute: ['Resolver', 'Admin'],
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
         Minutes: {
-          fieldType: "number",
+          fieldType: 'number',
           required: false,
         },
       },
@@ -368,15 +367,15 @@ export default class Ticket extends Table {
 
     // These actions are just for requesters.
     this.actionAdd({
-      label: "Comment",
-      method: "requesterComment",
-      helpText: "Add a comment to the ticket.",
-      rolesExecute: ["Authenticated"],
-      rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
+      label: 'Comment',
+      method: this.requesterComment,
+      helpText: 'Add a comment to the ticket.',
+      rolesExecute: ['Authenticated'],
+      rolesNotExecute: ['Resolver', 'Admin'], // Hide from resolvers. This is for end users only.
       disabled: this.ticketOpen,
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
       },
@@ -384,131 +383,133 @@ export default class Ticket extends Table {
 
     // These actions are just for requesters.
     this.actionAdd({
-      label: "Close Ticket",
-      method: "closeTicket",
-      helpText: "Close this ticket.",
-      rolesExecute: ["Authenticated"],
-      rolesNotExecute: ["Resolver", "Admin"], // Hide from resolvers. This is for end users only.
+      label: 'Close Ticket',
+      method: this.closeTicket,
+      helpText: 'Close this ticket.',
+      rolesExecute: ['Authenticated'],
+      rolesNotExecute: ['Resolver', 'Admin'], // Hide from resolvers. This is for end users only.
       verify:
-        "Are you sure you want to close this ticket? This action can not be undone. Please provide a comment on why you are closing the ticket.",
+        'Are you sure you want to close this ticket? This action can not be undone. Please provide a comment on why you are closing the ticket.',
       disabled: this.ticketOpen,
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
       },
     });
 
     this.actionAdd({
-      label: "Reopen Ticket",
+      label: 'Reopen Ticket',
       method: this.openTicket,
-      helpText: "Reopen Ticket.",
+      helpText: 'Reopen Ticket.',
       disabled: this.ticketClose,
-      rolesExecute: ["Resolver", "Admin"],
+      rolesExecute: ['Resolver', 'Admin'],
       verify:
-        "Provide a commment to the user explaining why the ticket is being reopened. The comment will be sent to the user and the ticket will be updated to Open status.",
+        'Provide a commment to the user explaining why the ticket is being reopened. The comment will be sent to the user and the ticket will be updated to Open status.',
       inputs: {
         Comment: {
-          fieldType: "text",
+          fieldType: 'text',
           required: true,
         },
         Minutes: {
-          fieldType: "number",
+          fieldType: 'number',
           required: false,
         },
       },
     });
 
     this.actionAdd({
-      label: "Attach File(s)",
-      type: "attach",
+      label: 'Attach File(s)',
+      type: 'attach',
       disabled: this.ticketOpen,
     });
 
     // Special role for who can be assigned a ticket
     this.addRecord({
-      packageName: "core",
-      className: "role",
-      name: "Resolver",
-      desc: "Can be assigned tickets. Must not be assigned to groups. Always assign directly to users.",
+      packageName: 'core',
+      className: 'role',
+      name: 'Resolver',
+      desc: 'Can be assigned tickets. Must not be assigned to groups. Always assign directly to users.',
     });
 
     this.addRecord({
-      packageName: "core",
-      className: "group",
-      name: "Helpdesk",
+      packageName: 'core',
+      className: 'group',
+      name: 'Helpdesk',
     });
 
     this.addRecord({
-      packageName: "core",
-      className: "user",
-      name: "Bob Resolver",
-      password: process.env.ADMIN_PASSWORD || "fdr*vjy!jrn4DKD4qxe",
-      email: "resolver@vacso.com",
+      packageName: 'core',
+      className: 'user',
+      name: 'Bob Resolver',
+      password: process.env.ADMIN_PASSWORD || 'fdr*vjy!jrn4DKD4qxe',
+      email: 'resolver@vacso.com',
       loginAllowed: true,
     });
 
     this.addRecord({
-      packageName: "core",
-      className: "user",
-      name: "Frank Requester",
-      password: process.env.ADMIN_PASSWORD || "fdr*vjy!jrn4DKD4qxe",
-      email: "requester@vacso.com",
+      packageName: 'core',
+      className: 'user',
+      name: 'Frank Requester',
+      password: process.env.ADMIN_PASSWORD || 'fdr*vjy!jrn4DKD4qxe',
+      email: 'requester@vacso.com',
       loginAllowed: true,
     });
 
     this.addRecord({
-      packageName: "core",
-      className: "user_group",
+      packageName: 'core',
+      className: 'user_group',
       id1: 1,
       id2: 3,
     });
 
     this.addRecord({
-      packageName: "core",
-      className: "user_role",
+      packageName: 'core',
+      className: 'user_role',
       id1: 3,
       id2: 3,
     });
 
     this.initAdd(async () => {
-      this.packages.core.comment.rolesReadAdd("Authenticated");
-      this.packages.core.comment.rolesWriteAdd("Resolver", "Admin");
+      this.packages.core.comment.rolesReadAdd('Authenticated');
+      this.packages.core.comment.rolesWriteAdd('Resolver', 'Admin');
       this.packages.core.comment.addAccessFilter(async (user, query) => {
         // Plain users can't read private comments
-        if (user && !(await user.userHasAnyRoleName("Resolver", "Admin"))) {
-          query.where("type", "!=", "Private");
+        if (user && !(await user.userHasAnyRoleName('Resolver', 'Admin'))) {
+          query.where('type', '!=', 'Private');
           const that = this;
-          query.innerJoin("ticketing.ticket", function () {
-            this.on("ticket.id", "=", "comment.row");
-            this.andOn("comment.db", "=", that.knex.raw("'ticketing'"));
-            this.andOn("comment.table", "=", that.knex.raw("'ticket'"));
-            this.andOn("requester", that.knex.raw(`'${user.id}'`));
+          query.innerJoin('ticketing.ticket', function () {
+            this.on('ticket.id', '=', 'comment.row');
+            this.andOn('comment.db', '=', that.knex.raw("'ticketing'"));
+            this.andOn('comment.table', '=', that.knex.raw("'ticket'"));
+            this.andOn('requester', that.knex.raw(`'${user.id}'`));
           });
         }
         return [query];
       });
 
-      this.packages.core.event.on("email", async (email) => {
+      this.packages.core.event.on('email', async (email) => {
         await this.createFromEmail(email);
       });
 
-      this.packages.core.event.on("search.query", async (args) => {
+      this.packages.core.event.on('search.query', async (args) => {
         console.log(args);
         if (
           args.req.user &&
-          !(await args.req.user.userHasAnyRoleName("Resolver", "Admin"))
+          !(await args.req.user.userHasAnyRoleName('Resolver', 'Admin'))
         ) {
-          console.log("duh");
-          args.filter = "requester:" + args.req.user.id;
+          console.log('duh');
+          args.filter = 'requester:' + args.req.user.id;
         }
         return [args.query, args.filter];
       });
 
       this.packages.core.user.actionAdd({
         label: 'Create Ticket for User',
-        method: this.createTicketForUser,
+        method: (...test) => {
+          return this.createTicketForUser(...test); // force this to be bound to the ticket class. otherwise it will be bound to the user class.
+        },
         rolesExecute: ['Admin', 'Authenticated'],
         inputs: {
           ticketTitle: {
@@ -522,52 +523,43 @@ export default class Ticket extends Table {
             fieldType: 'text',
           },
         },
-      })
-      
-      this.packages.core.event.on(
-        "core.user.createTicketForUser",
-        async({data, req}) => {
-          await this.recordCreate({
-            data,
-            req
-        })
       });
 
       this.packages.core.event.on(
-        "core.comment.recordCreate.after",
-        async ({ data, req }) => {
-          console.log("recordCreate.after", data);
+        'core.comment.recordCreate.after',
+        async ({data, req}) => {
+          console.log('recordCreate.after', data);
           await this.emailComment(data, req);
-        }
+        },
       );
 
       this.packages.core.event.on(
-        "ticketing.ticket.recordCreate.after",
+        'ticketing.ticket.recordCreate.after',
         async (...args) => {
           await this.emailNewTicket(...args);
-        }
+        },
       );
 
       // Register a fancy query modifier for the user table
       this.packages.core.user.queryModifierAdd(
-        "ticketing.ticket.resolver",
+        'ticketing.ticket.resolver',
         (query, knex, args) => {
           const newQuery = query.whereIn(
-            "id",
+            'id',
             knex
-              .select("id2")
-              .from("user_role")
+              .select('id2')
+              .from('user_role')
               .where(
-                "id1",
-                knex.select("id").from("role").where("name", "Resolver")
-              )
+                'id1',
+                knex.select('id').from('role').where('name', 'Resolver'),
+              ),
           );
           if (args.value) {
             // If the current value of the field is not included in the previous filter, we still want to include it in the list.
-            newQuery.orWhere("id", args.value);
+            newQuery.orWhere('id', args.value);
           }
           return newQuery;
-        }
+        },
       );
 
       const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -575,13 +567,13 @@ export default class Ticket extends Table {
       this.templates = {};
 
       this.templates.subject = await this.compileTemplate(
-        path.join(__dirname, "ticket", "subject.hbs")
+        path.join(__dirname, 'ticket', 'subject.hbs'),
       );
       this.templates.newCommentBody = await this.compileTemplate(
-        path.join(__dirname, "ticket", "newCommentBody.hbs")
+        path.join(__dirname, 'ticket', 'newCommentBody.hbs'),
       );
       this.templates.newTicketBody = await this.compileTemplate(
-        path.join(__dirname, "ticket", "newTicketBody.hbs")
+        path.join(__dirname, 'ticket', 'newTicketBody.hbs'),
       );
 
       // Is this a good implementation? Probably not.
@@ -590,7 +582,7 @@ export default class Ticket extends Table {
       this.packages.core.comment.objectToSearchObject = async (object) => {
         if (
           (object.db =
-            "ticketing" && object.table == "ticket" && object.type == "Public")
+            'ticketing' && object.table == 'ticket' && object.type == 'Public')
         ) {
           const record = await this.packages.ticketing.ticket.recordGet({
             recordId: object.row,
@@ -613,7 +605,7 @@ export default class Ticket extends Table {
         row: object.id,
         table: this.table,
         db: this.db,
-        type: "Public",
+        type: 'Public',
       },
     });
 
@@ -624,15 +616,15 @@ export default class Ticket extends Table {
     return text;
   }
 
-  async ticketClose({ record }) {
-    if (record.status !== "Closed") {
-      return "Ticket must be closed.";
+  async ticketClose({record}) {
+    if (record.status !== 'Closed') {
+      return 'Ticket must be closed.';
     }
   }
 
-  async ticketOpen({ record }) {
-    if (record.status === "Closed") {
-      return "Ticket must not be closed.";
+  async ticketOpen({record}) {
+    if (record.status === 'Closed') {
+      return 'Ticket must not be closed.';
     }
   }
 
@@ -653,17 +645,17 @@ export default class Ticket extends Table {
     if (!user) {
       //req.warnings.push("No user found! Can not send email");
       //return;
-      throw new Error("No user found! Can not send email");
+      throw new Error('No user found! Can not send email');
     }
 
     if (!user.email || !user.email.match(/@/)) {
       //req.warnings.push("No valid email found for user! Can not send email");
       //return;
-      throw new Error("No valid email found for user! Can not send email");
+      throw new Error('No valid email found for user! Can not send email');
     }
 
-    if (process.env.DEMO_MODE == "true") {
-      throw new Error("Outbound emails are disabled in demo mode.");
+    if (process.env.DEMO_MODE == 'true') {
+      throw new Error('Outbound emails are disabled in demo mode.');
     }
 
     const email = {
@@ -693,7 +685,7 @@ export default class Ticket extends Table {
     return results;
   }
 
-  async emailNewTicket({ recordId, data, req }) {
+  async emailNewTicket({recordId, data, req}) {
     try {
       await this.sendEmail({
         recordId,
@@ -712,27 +704,27 @@ export default class Ticket extends Table {
     } catch (error) {
       req.message({
         detail: `Error sending email: ${error.message}`,
-        severity: "warn",
+        severity: 'warn',
       });
     }
     //}
   }
 
   async emailComment(args, req) {
-    console.log("comment", args);
+    console.log('comment', args);
 
-    if (args && args.type === "Private") {
+    if (args && args.type === 'Private') {
       // We dont want to send emails for private comments
       return args;
     }
 
-    if (args.author == "1") {
+    if (args.author == '1') {
       // We dont want to send emails for system comments
       return args;
     }
 
     args.record = await this.packages[args.db][args.table].recordGet({
-      where: { "ticket.id": args.row },
+      where: {'ticket.id': args.row},
     });
 
     try {
@@ -747,14 +739,14 @@ export default class Ticket extends Table {
     } catch (error) {
       req.message({
         detail: `Error sending email: ${error.message}`,
-        severity: "warn",
+        severity: 'warn',
       });
     }
 
     return;
   }
 
-  async timeEntry({ recordId, Minutes, req }) {
+  async timeEntry({recordId, Minutes, req}) {
     await this.packages.core.time.createEntry({
       req,
       db: this.db,
@@ -765,7 +757,7 @@ export default class Ticket extends Table {
     return {};
   }
 
-  async assignToMe({ recordId, req }) {
+  async assignToMe({recordId, req}) {
     await this.recordUpdate({
       recordId,
       data: {
@@ -776,20 +768,20 @@ export default class Ticket extends Table {
     return {};
   }
 
-  async requesterComment({ recordId, Comment, req }) {
+  async requesterComment({recordId, Comment, req}) {
     await this.packages.core.comment.createComment({
       req: elevateUser(req), // execute as system user as the actual user doesn't have writes to write to the table.
       db: this.db,
       table: this.table,
       recordId,
       comment: Comment,
-      type: "Public",
+      type: 'Public',
     });
 
     await this.recordUpdate({
       recordId: recordId,
       data: {
-        status: "Feedback Received",
+        status: 'Feedback Received',
       },
       req: elevateUser(req),
     });
@@ -797,80 +789,80 @@ export default class Ticket extends Table {
     return {};
   }
 
-  async publicUpdate({ recordId, Comment, Minutes, req }) {
+  async publicUpdate({recordId, Comment, Minutes, req}) {
     await this.packages.core.comment.createComment({
       req,
       db: this.db,
       table: this.table,
       recordId,
       comment: Comment,
-      type: "Public",
+      type: 'Public',
     });
 
     if (Minutes) {
-      await this.timeEntry({ recordId, Minutes, req });
+      await this.timeEntry({recordId, Minutes, req});
     }
 
     return {};
   }
 
-  async privateUpdate({ recordId, Comment, Minutes, req }) {
+  async privateUpdate({recordId, Comment, Minutes, req}) {
     await this.packages.core.comment.createComment({
       req,
       db: this.db,
       table: this.table,
       recordId,
       comment: Comment,
-      type: "Private",
+      type: 'Private',
     });
 
     if (Minutes) {
-      this.timeEntry({ recordId, Minutes, req });
+      this.timeEntry({recordId, Minutes, req});
     }
 
     return {};
   }
 
-  async requestFeedback({ recordId, Comment, Minutes, req }) {
+  async requestFeedback({recordId, Comment, Minutes, req}) {
     await this.commentAndChangeStatus({
       recordId,
       comment: Comment,
-      status: "Pending Feedback",
+      status: 'Pending Feedback',
       req,
     });
 
     if (Minutes) {
-      this.timeEntry({ recordId, Minutes, req });
+      this.timeEntry({recordId, Minutes, req});
     }
 
     return {};
   }
 
-  async closeTicket({ recordId, Comment, Minutes, req }) {
+  async closeTicket({recordId, Comment, Minutes, req}) {
     await this.commentAndChangeStatus({
       recordId,
       comment: Comment,
-      status: "Closed",
+      status: 'Closed',
       req: elevateUser(req),
     });
 
     if (Minutes && !isNaN(Minutes)) {
-      await this.timeEntry({ recordId, Minutes, req });
+      await this.timeEntry({recordId, Minutes, req});
     }
 
     return {};
   }
 
-  async openTicket({ recordId, Comment, Minutes, req }) {
+  async openTicket({recordId, Comment, Minutes, req}) {
     await this.commentAndChangeStatus({
       recordId,
       comment: Comment,
-      status: "Open",
+      status: 'Open',
       req: elevateUser(req),
     });
 
     if (Minutes && !isNaN(Minutes)) {
-      await this.timeEntry({ recordId, Minutes, req });
+      await this.timeEntry({recordId, Minutes, req});
     }
 
     return {};
@@ -880,11 +872,11 @@ export default class Ticket extends Table {
     recordId,
     comment,
     status,
-    type = "Public",
+    type = 'Public',
     req,
   }) {
     if (!comment) {
-      throw new Error("Comment is required.");
+      throw new Error('Comment is required.');
     }
 
     await this.packages.core.comment.createComment({
@@ -896,7 +888,7 @@ export default class Ticket extends Table {
       type,
     });
 
-    await this.recordUpdate({ recordId, data: { status }, req });
+    await this.recordUpdate({recordId, data: {status}, req});
   }
 
   async createFromEmail(message) {
@@ -915,7 +907,7 @@ export default class Ticket extends Table {
       }
 
       if (record) {
-        console.log("Found existing ticket, adding comment.", record);
+        console.log('Found existing ticket, adding comment.', record);
         this.packages.core.comment.createComment({
           req: systemRequest(this),
           /*{
@@ -929,13 +921,13 @@ export default class Ticket extends Table {
           table: this.table,
           recordId: record.id,
           comment: message.body,
-          type: "Public",
+          type: 'Public',
         });
 
         await this.recordUpdate({
           recordId: record.id,
           data: {
-            status: "Feedback Received",
+            status: 'Feedback Received',
             emailId: message.emailId,
           },
           req: systemRequest(this),
@@ -962,7 +954,7 @@ export default class Ticket extends Table {
         subject: message.subject,
         body: message.body,
         requester: user?.id,
-        status: "Open",
+        status: 'Open',
         group: message.assignmentGroup,
         emailConversationId: message.emailConversationId,
         emailId: message.emailId,
@@ -971,28 +963,30 @@ export default class Ticket extends Table {
 
       req: {
         user: systemUser(this),
-        action: "Ticket Create from Email",
+        action: 'Ticket Create from Email',
       },
     });
   }
 
-  async createTicketForUser({ recordId, ticketTitle, ticketDescription, req }) {
-    this.packages.ticketing.ticket.recordCreate(
-      {
-        data:{
-          subject: ticketTitle,
-          body: ticketDescription,
-          requester: recordId,
-          assignedTo: recordId,
-        },
-        req
-      })
-  }
+  async createTicketForUser({recordId, ticketTitle, ticketDescription, req}) {
+    const record = await this.recordCreate({
+      data: {
+        subject: ticketTitle,
+        body: ticketDescription,
+        requester: recordId,
+        assignedTo: req.user.id,
+      },
+      req,
+    });
 
+    req.navigateTo(`/ticketing/ticket/${record.id}`);
+
+    return {};
+  }
 
   async compileTemplate(filePath) {
     return new Promise((resolve, reject) => {
-      fs.readFile(filePath, "utf8", (err, source) => {
+      fs.readFile(filePath, 'utf8', (err, source) => {
         if (err) reject(err);
         else resolve(Handlebars.compile(source));
       });
