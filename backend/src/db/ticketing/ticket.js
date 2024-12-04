@@ -200,9 +200,16 @@ export default class Ticket extends Table {
     });
 
     this.addMenuItem({
+      label: 'Create Ticket',
+      navigate: '/ticketing/ticket/create',
+      icon: 'Plus',
+      order: 1,
+    });
+
+    this.addMenuItem({
       label: 'Tickets',
       view: null,
-      order: 1,
+      order: 2,
       icon: 'Ticket',
       roles: ['Resolver', 'Admin'],
     });
@@ -229,11 +236,6 @@ export default class Ticket extends Table {
     this.addMenuItem({
       label: 'My Tickets',
       rolesHide: ['Resolver', 'Admin'],
-    });
-
-    this.addMenuItem({
-      label: 'Create Ticket',
-      navigate: '/ticketing/ticket/create',
     });
 
     this.addMenuItem({
