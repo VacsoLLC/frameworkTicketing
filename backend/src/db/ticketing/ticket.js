@@ -509,8 +509,8 @@ export default class Ticket extends Table {
 
       this.packages.core.user.actionAdd({
         label: 'Create Ticket for User',
-        method: (...test) => {
-          return this.createTicketForUser(...test); // force this to be bound to the ticket class. otherwise it will be bound to the user class.
+        method: (...args) => {
+          return this.createTicketForUser(...args); // force this to be bound to the ticket class. otherwise it will be bound to the user class.
         },
         rolesExecute: ['Admin', 'Authenticated'],
         inputs: {
