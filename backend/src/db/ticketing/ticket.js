@@ -619,13 +619,13 @@ export default class Ticket extends Table {
   }
 
   async ticketClose({record}) {
-    if (record.status !== 'Closed') {
+    if (record?.status !== 'Closed') {
       return 'Ticket must be closed.';
     }
   }
 
   async ticketOpen({record}) {
-    if (record.status === 'Closed') {
+    if (record?.status === 'Closed') {
       return 'Ticket must not be closed.';
     }
   }
