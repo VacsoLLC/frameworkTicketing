@@ -951,7 +951,7 @@ export default class Ticket extends Table {
 
     // TODO build an config option to create user if not found, create ticket with no requester, or reject email
 
-    await this.recordCreate({
+    const newRecord = await this.recordCreate({
       data: {
         subject: message.subject,
         body: message.body,
@@ -968,6 +968,22 @@ export default class Ticket extends Table {
         action: 'Ticket Create from Email',
       },
     });
+
+    if(newRecord && message?.attachments?.length > 0){
+
+      await this.packages.core.attachment.addFilesToRecord({
+        inputFiles: (message.attachments ?? []).map(item => ({
+          file: item.contentBytes,
+          filename: item.name,
+          type: 'file',
+          mimetype: item.contentType,
+        })),
+        db: this.db,
+        table: this.table,
+        row: newRecord.id,
+        req: systemRequest(this),
+      })
+    }
   }
 
   async createTicketForUser({recordId, ticketTitle, ticketDescription, req}) {
