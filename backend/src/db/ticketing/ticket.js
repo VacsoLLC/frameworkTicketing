@@ -171,6 +171,7 @@ export default class Ticket extends Table {
         row: 'id',
       },
       tabName: 'Attachments',
+      tabOrder: 99997,
     });
 
     this.columnAdd({
@@ -226,7 +227,10 @@ export default class Ticket extends Table {
       label: 'My Tickets',
       parent: 'Tickets',
       filter: (req) => {
-        return [{assignedTo: req.user?.id}, ['status', '!=', 'Closed']];
+        return [
+          {'ticket.assignedTo': req.user?.id},
+          ['ticket.status', '!=', 'Closed'],
+        ];
       },
       icon: 'User',
       order: 1,
@@ -242,7 +246,7 @@ export default class Ticket extends Table {
       label: "My Group's Tickets",
       parent: 'Tickets',
       filter: (req) => {
-        return [['group', 'IN', req.user?.groups]];
+        return [['ticket.group', 'IN', req.user?.groups]];
       },
       icon: 'Users',
       order: 2,
@@ -969,10 +973,9 @@ export default class Ticket extends Table {
       },
     });
 
-    if(newRecord && message?.attachments?.length > 0){
-
+    if (newRecord && message?.attachments?.length > 0) {
       await this.packages.core.attachment.addFilesToRecord({
-        inputFiles: (message.attachments ?? []).map(item => ({
+        inputFiles: (message.attachments ?? []).map((item) => ({
           file: item.contentBytes,
           filename: item.name,
           type: 'file',
@@ -982,7 +985,7 @@ export default class Ticket extends Table {
         table: this.table,
         row: newRecord.id,
         req: systemRequest(this),
-      })
+      });
     }
   }
 
