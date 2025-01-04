@@ -5,5 +5,5 @@ export default {
     // This is in minutes
     expiryTime: process.env.FORGOT_PASSWORD_EXPIRY_TIME || 60, // 1 hour,
     enabled: process.env.FORGOT_PASSWORD_ENABLED ?? true,
-    baseURL: process.env.FORGOT_PASSWORD_BASE_URL || "https://localhost:5173",
+    baseURL: process.env.FRONTEND_BASE_URL || "https://localhost:5173",
 }
