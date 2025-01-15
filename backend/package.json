@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "set DEBUG=express:* & nodemon --inspect ./index.mjs",
+    "dev": "set DEBUG=express:* & node --trace-warnings --inspect ./index.mjs",
     "index": "node --inspect ./index.mjs --index-all",
     "dev-no-nodemon": "node --inspect ./index.mjs",
     "indocker": "node ./index.mjs",
@@ -15,13 +15,15 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.0",
     "@vacso/frameworkbackend": "1.0.31",
     "bcrypt": "^5.1.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "handlebars": "^4.7.8",
     "mysql2": "^3.9.7",
-    "nodemon": "^3.1.6"
+    "nodemon": "^3.1.6",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.8"
