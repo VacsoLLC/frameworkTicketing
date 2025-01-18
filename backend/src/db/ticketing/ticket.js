@@ -347,13 +347,6 @@ export default class Ticket extends Table {
         Minutes: {
           fieldType: 'number',
           required: true,
-          validations: [
-            ({value}) => {
-              if (isNaN(value) || value < 1) {
-                return 'Minutes must be greater than 0.';
-              }
-            },
-          ],
         },
       },
       validator: validators.timeEntry,

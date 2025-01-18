@@ -19,6 +19,7 @@ const Minutes = z.coerce
   .number({
     invalid_type_error: 'Minutes must be a number',
   })
+  .min(1, 'Minutes must be greater than 0')
   .optional();
 
 ////////////////////////
