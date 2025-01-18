@@ -13,6 +13,8 @@ import {fileURLToPath} from 'url';
 import fs from 'fs';
 import Handlebars from 'handlebars';
 
+import {z} from 'zod';
+
 export default class Ticket extends Table {
   constructor(args) {
     super({name: 'Ticket', className: 'ticket', ...args});
@@ -440,7 +442,7 @@ export default class Ticket extends Table {
       label: 'Attach File(s)',
       type: 'attach',
       disabled: this.ticketOpen,
-      //TODO: add a validator for this action
+      validator: z.object({}),
     });
 
     // Special role for who can be assigned a ticket
@@ -541,7 +543,10 @@ export default class Ticket extends Table {
             fieldType: 'text',
           },
         },
-        //TODO: add a validator for this
+        validator: z.object({
+          ticketTitle: z.string(),
+          ticketDescription: z.string().optional(),
+        }),
       });
 
       this.packages.core.event.on(
@@ -605,7 +610,6 @@ export default class Ticket extends Table {
         ) {
           const record = await this.packages.ticketing.ticket.recordGet({
             recordId: object.row,
-            req: {},
           });
           console.log(record);
           return {

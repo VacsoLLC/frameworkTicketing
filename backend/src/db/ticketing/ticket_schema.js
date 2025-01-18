@@ -3,7 +3,7 @@ import {extendZodWithOpenApi} from '@asteasolutions/zod-to-openapi';
 
 extendZodWithOpenApi(z);
 
-const recordId = z.number({
+const recordId = z.coerce.number({
   required_error: 'Record ID is required',
   invalid_type_error: 'Record ID must be a number',
 });
@@ -20,7 +20,7 @@ const Minutes = z.coerce
     invalid_type_error: 'Minutes must be a number',
   })
   .optional();
-  
+
 ////////////////////////
 
 const CommentAndMinutes = z
