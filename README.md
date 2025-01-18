@@ -25,7 +25,7 @@ All outbound emails are disabled in the demo.
 
 ## WARNING: Beta!
 
-Framework Ticketing is pre-release. It is under active development and should be used with caution.
+Framework Ticketing is pre-release. It is under active development and should be used with caution. It is safe to use on a private network, but should not be exposed to the public Internet. 
 
 ## Features
 
@@ -217,7 +217,9 @@ Go more information, see:
 1. Admin setup: https://learn.microsoft.com/en-us/microsoftteams/inbound-call-routing
 1. User setup: https://support.microsoft.com/en-us/office/manage-your-call-settings-in-microsoft-teams-456cb611-3477-496f-b31a-6ab752a7595f
 
-## Documentation
+## OpenAPI spec
+
+The openAPI spec can be access via the /api/core/openapi/list endpoint.
 
 ## Contributing
 

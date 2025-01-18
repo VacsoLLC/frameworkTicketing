@@ -6,10 +6,14 @@ import {
   systemRequest,
 } from '@vacso/frameworkbackend';
 
+import * as validators from './ticket_schema.js';
+
 import path from 'path';
 import {fileURLToPath} from 'url';
 import fs from 'fs';
 import Handlebars from 'handlebars';
+
+import {z} from 'zod';
 
 export default class Ticket extends Table {
   constructor(args) {
@@ -268,6 +272,7 @@ export default class Ticket extends Table {
       helpText: 'Assign this ticket to yourself.',
       rolesExecute: ['Resolver', 'Admin'],
       disabled: this.ticketOpen,
+      validator: validators.assignToMe,
     });
 
     this.actionAdd({
@@ -288,6 +293,7 @@ export default class Ticket extends Table {
           required: false,
         },
       },
+      validator: validators.requestFeedback,
     });
 
     this.actionAdd({
@@ -307,6 +313,7 @@ export default class Ticket extends Table {
           required: false,
         },
       },
+      validator: validators.publicUpdate,
     });
 
     this.actionAdd({
@@ -326,6 +333,7 @@ export default class Ticket extends Table {
           required: false,
         },
       },
+      validator: validators.privateUpdate,
     });
 
     this.actionAdd({
@@ -339,15 +347,9 @@ export default class Ticket extends Table {
         Minutes: {
           fieldType: 'number',
           required: true,
-          validations: [
-            ({value}) => {
-              if (isNaN(value) || value < 1) {
-                return 'Minutes must be greater than 0.';
-              }
-            },
-          ],
         },
       },
+      validator: validators.timeEntry,
     });
 
     this.actionAdd({
@@ -369,6 +371,7 @@ export default class Ticket extends Table {
           required: false,
         },
       },
+      validator: validators.closeTicket,
     });
 
     // These actions are just for requesters.
@@ -385,6 +388,7 @@ export default class Ticket extends Table {
           required: true,
         },
       },
+      validator: validators.requesterComment,
     });
 
     // These actions are just for requesters.
@@ -403,6 +407,7 @@ export default class Ticket extends Table {
           required: true,
         },
       },
+      validator: validators.closeTicket,
     });
 
     this.actionAdd({
@@ -423,12 +428,14 @@ export default class Ticket extends Table {
           required: false,
         },
       },
+      validator: validators.openTicket,
     });
 
     this.actionAdd({
       label: 'Attach File(s)',
       type: 'attach',
       disabled: this.ticketOpen,
+      validator: z.object({}),
     });
 
     // Special role for who can be assigned a ticket
@@ -529,6 +536,10 @@ export default class Ticket extends Table {
             fieldType: 'text',
           },
         },
+        validator: z.object({
+          ticketTitle: z.string(),
+          ticketDescription: z.string().optional(),
+        }),
       });
 
       this.packages.core.event.on(
@@ -646,6 +657,7 @@ export default class Ticket extends Table {
   }) {
     const user = await this.packages.core.user.recordGet({
       recordId: userId,
+      req,
     });
 
     if (!user) {
@@ -731,6 +743,7 @@ export default class Ticket extends Table {
 
     args.record = await this.packages[args.db][args.table].recordGet({
       where: {'ticket.id': args.row},
+      req,
     });
 
     try {
@@ -829,6 +842,16 @@ export default class Ticket extends Table {
     return {};
   }
 
+  /**
+   * Request feedback from the user for a ticket
+   * @param params - The parameters for requesting feedback
+   * @param params.recordId - The ID of the ticket
+   * @param params.Comment - The comment to add to the ticket
+   * @param params.Minutes - Optional time spent in minutes
+   * @param params.req - The request object
+   * @returns A promise that resolves to an empty object
+   * @throws {Error} If the parameters are invalid
+   */
   async requestFeedback({recordId, Comment, Minutes, req}) {
     await this.commentAndChangeStatus({
       recordId,
