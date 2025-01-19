@@ -17,7 +17,13 @@ import {z} from 'zod';
 
 export default class Ticket extends Table {
   constructor(args) {
-    super({name: 'Ticket', className: 'ticket', ...args});
+    super({
+      name: 'Ticket',
+      className: 'ticket',
+      defaultSortColumn: 'status',
+      defaultSortOrder: 'ASC',
+      ...args,
+    });
 
     this.rolesWriteAdd('Resolver', 'Admin');
     this.rolesReadAdd('Authenticated');
@@ -136,7 +142,20 @@ export default class Ticket extends Table {
       helpText: 'Status of the ticket',
       defaultValue: 'Open',
       fieldType: 'select',
-      options: ['Open', 'Closed', 'Pending Feedback', 'Feedback Received'],
+      options: [
+        'New',
+        'Open',
+        'Closed',
+        'Pending Feedback',
+        'Feedback Received',
+      ],
+      customSort: {
+        Closed: 99999,
+        'Pending Feedback': 1000,
+        Open: 3,
+        'Feedback Received': 2,
+        New: 1,
+      },
     });
 
     // TODO: document this use case... comment is a generic table that can be reused... manyToOneAdd should be used when ever possible, and it automatically calls add child
