@@ -140,7 +140,7 @@ export default class Ticket extends Table {
       //columnType: 'string',
       index: true,
       helpText: 'Status of the ticket',
-      defaultValue: 'Open',
+      defaultValue: 'New',
       fieldType: 'select',
       options: [
         'New',
