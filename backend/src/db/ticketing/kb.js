@@ -1,4 +1,4 @@
-import {Base} from '@vacso/frameworkBackend';
+import {Base} from '@vacso/frameworkbackend';
 export default class KB extends Base {
   constructor(args) {
     super({
