@@ -3,7 +3,7 @@ const path = require("path");
 
 console.log(
   path.join(
-    path.dirname(require.resolve("@vacso/frameworkFrontend")),
+    path.dirname(require.resolve("@vacso/frameworkfrontend")),
     "src/**/*.js"
   )
 );
@@ -21,7 +21,7 @@ export default {
     "./src/**/*.{js,jsx}",
 
     path.join(
-      path.dirname(require.resolve("@vacso/frameworkFrontend")),
+      path.dirname(require.resolve("@vacso/frameworkfrontend")),
       "src/**/*.{js,jsx}"
     ),
   ],
