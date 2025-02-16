@@ -1002,7 +1002,7 @@ export default class Ticket extends Table {
         subject: message.subject,
         body: message.body,
         requester: user?.id,
-        status: 'Open',
+        status: 'New',
         group: message.assignmentGroup,
         emailConversationId: message.emailConversationId,
         emailId: message.emailId,
