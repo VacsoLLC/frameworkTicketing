@@ -16,7 +16,7 @@
   "type": "module",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",
-    "@vacso/frameworkbackend": "1.0.39",
+    "@vacso/frameworkbackend": "1.0.40",
     "bcrypt": "^5.1.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
