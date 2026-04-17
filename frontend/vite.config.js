@@ -17,7 +17,17 @@ export default defineConfig({
     dedupe: ["react", "react-dom"],
   },
   optimizeDeps: {
-    include: ["react", "prop-types", "react-dom", "zustand", "interweave"],
+    include: [
+      "react",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "react-dom",
+      "react-dom/client",
+      "prop-types",
+      "zustand",
+      "interweave",
+      "@vacso/frameworkfrontend",
+    ],
   },
 
   server: {

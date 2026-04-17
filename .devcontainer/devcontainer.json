@@ -1,0 +1,27 @@
+{
+  "name": "frameworkTicketing",
+  "dockerComposeFile": ["./docker-compose.yml"],
+  "service": "dev",
+  "workspaceFolder": "/workspaces/frameworkTicketing",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "node",
+  "forwardPorts": [3000, 5173, 3306, 8882, 9229],
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright",
+        "ms-azuretools.vscode-docker",
+        "dsznajder.es7-react-js-snippets"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "playwright.env": {
+          "PLAYWRIGHT_BROWSERS_PATH": "/home/node/.cache/ms-playwright"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+# Dev-only compose. Mirrors the mariadb/marqo services from ../docker/docker-compose.yml —
+# keep in sync if the prod DB config changes (image, init SQL, env, port).
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/frameworkTicketing:cached
+      - ../../frameworkBackend:/workspaces/frameworkBackend:cached
+      - ../../frameworkFrontend:/workspaces/frameworkFrontend:cached
+      - ../../shared:/workspaces/shared:cached
+      - node-cache:/home/node/.cache
+      - claude-config:/home/node/.claude
+      - bn_modules:/workspaces/frameworkBackend/node_modules
+      - fn_modules:/workspaces/frameworkFrontend/node_modules
+      - tb_modules:/workspaces/frameworkTicketing/backend/node_modules
+      - tf_modules:/workspaces/frameworkTicketing/frontend/node_modules
+      - tt_modules:/workspaces/frameworkTicketing/node_modules
+    env_file:
+      - ../backend/.env
+    environment:
+      MARIADB_HOST: mariadb
+      MARQO_HOST: marqo
+      NODE_ENV: development
+    command: sleep infinity
+    depends_on:
+      - mariadb
+      - marqo
+
+  mariadb:
+    image: mariadb:latest
+    restart: unless-stopped
+    env_file:
+      - ../backend/.env
+    environment:
+      MARIADB_DATABASE: core
+      MARIADB_USER: framework
+    volumes:
+      - devmariadb:/var/lib/mysql
+      - ../docker/config/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  marqo:
+    image: marqoai/marqo:2.12
+    restart: unless-stopped
+
+volumes:
+  node-cache:
+  claude-config:
+  bn_modules:
+  fn_modules:
+  tb_modules:
+  tf_modules:
+  tt_modules:
+  devmariadb:
