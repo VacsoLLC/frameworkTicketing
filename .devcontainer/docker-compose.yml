@@ -12,6 +12,9 @@ services:
       - ../../frameworkFrontend:/workspaces/frameworkFrontend:cached
       - ../../shared:/workspaces/shared:cached
       - ../../casenet:/workspaces/casenet:cached
+      # docker-outside-of-docker: expose the host's docker daemon to the
+      # dev container so scripts/deploy.sh can build + push to ECR.
+      - /var/run/docker.sock:/var/run/docker.sock
       - node-cache:/home/node/.cache
       - claude-config:/home/node/.claude
       - bn_modules:/workspaces/frameworkBackend/node_modules

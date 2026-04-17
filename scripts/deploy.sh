@@ -50,10 +50,38 @@ if [ "$DEPLOY_BACKEND" = false ] && [ "$DEPLOY_FRONTEND" = false ]; then
   exit 1
 fi
 
+# Reads a single terraform output by name. Silences terraform's stderr
+# warnings (e.g. the multi-line "No outputs found" block that will
+# otherwise land inside the variable if stderr isn't redirected), and
+# aborts with a clear message pointing the operator at `terraform apply`
+# if the named output is missing or empty.
+tf_output() {
+  local name="$1"
+  local value
+  value=$(terraform output -raw "$name" 2>/dev/null || true)
+  if [ -z "$value" ]; then
+    echo "ERROR: terraform output '$name' is missing or empty." >&2
+    echo "       Run 'terraform apply' in $TF_DIR first, then retry." >&2
+    exit 1
+  fi
+  printf '%s' "$value"
+}
+
+# Pre-flight: fail early with a clear message instead of deep inside a
+# pipeline.
+if [ "$DEPLOY_BACKEND" = true ] && ! command -v docker >/dev/null 2>&1; then
+  echo "ERROR: 'docker' is required for backend deploys but not found on PATH." >&2
+  exit 1
+fi
+if [ "$DEPLOY_FRONTEND" = true ] && ! command -v yarn >/dev/null 2>&1; then
+  echo "ERROR: 'yarn' is required for frontend deploys but not found on PATH." >&2
+  exit 1
+fi
+
 # Region is shared by both modes; read it up front.
 echo "Reading terraform outputs..."
 cd "$TF_DIR"
-REGION=$(terraform output -raw aws_region)
+REGION=$(tf_output aws_region)
 cd "$PROJECT_DIR"
 
 # --- Backend deployment ---
@@ -62,9 +90,9 @@ if [ "$DEPLOY_BACKEND" = true ]; then
   echo "=== Deploying Backend ==="
 
   cd "$TF_DIR"
-  ECR_URL=$(terraform output -raw ecr_repository_url)
-  CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)
-  SERVICE_NAME=$(terraform output -raw ecs_service_name)
+  ECR_URL=$(tf_output ecr_repository_url)
+  CLUSTER_NAME=$(tf_output ecs_cluster_name)
+  SERVICE_NAME=$(tf_output ecs_service_name)
   cd "$PROJECT_DIR"
 
   AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -103,8 +131,8 @@ if [ "$DEPLOY_FRONTEND" = true ]; then
   echo "=== Deploying Frontend ==="
 
   cd "$TF_DIR"
-  S3_BUCKET=$(terraform output -raw s3_bucket_name)
-  CF_DIST_ID=$(terraform output -raw cloudfront_distribution_id)
+  S3_BUCKET=$(tf_output s3_bucket_name)
+  CF_DIST_ID=$(tf_output cloudfront_distribution_id)
   cd "$PROJECT_DIR"
 
   echo "Installing frontend dependencies..."
