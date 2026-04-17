@@ -12,3 +12,9 @@ test-results
 docker/config/nginx/conf.d/ssl.conf
 backend/uploads
 
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+terraform/environments/*/terraform.tfvars
+

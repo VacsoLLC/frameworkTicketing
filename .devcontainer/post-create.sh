@@ -11,6 +11,21 @@ sudo chown node:node \
   /home/node/.cache \
   /home/node/.claude
 
+# Docker-outside-of-docker: the bind-mounted /var/run/docker.sock is
+# owned by a group whose GID matches the host's `docker` group, which
+# rarely matches the one the Dockerfile created. Re-point the container's
+# `docker` group to whatever GID the mounted socket exposes so the `node`
+# user (already in the docker group) can talk to the daemon without sudo.
+if [ -S /var/run/docker.sock ]; then
+  SOCK_GID=$(stat -c %g /var/run/docker.sock)
+  if [ "$SOCK_GID" -ne 0 ] && ! getent group "$SOCK_GID" >/dev/null; then
+    sudo groupmod -g "$SOCK_GID" docker || true
+  elif [ "$SOCK_GID" -ne 0 ]; then
+    # A group already has this GID — just add node to it.
+    sudo usermod -aG "$(getent group "$SOCK_GID" | cut -d: -f1)" node || true
+  fi
+fi
+
 if [ ! -f frameworkTicketing/backend/.env ]; then
   (cd frameworkTicketing/backend && bash ./generate_env.sh)
   sed -i 's|^DOMAIN_NAME=.*|DOMAIN_NAME=localhost|' frameworkTicketing/backend/.env
