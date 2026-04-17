@@ -1,0 +1,7 @@
+# Copy to terraform.tfvars and adjust as needed.
+# All values have sensible defaults in main.tf; only override here if needed.
+
+aws_region   = "us-east-2"
+project_name = "frameworkticketing"
+environment  = "dev"
+domain_name  = "ticketing.dev.vacso.com"
