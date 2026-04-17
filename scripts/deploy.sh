@@ -10,7 +10,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 TF_DIR="$PROJECT_DIR/terraform/environments/dev"
-REGION="us-east-2"
 
 DEPLOY_BACKEND=false
 DEPLOY_FRONTEND=false
@@ -51,22 +50,25 @@ if [ "$DEPLOY_BACKEND" = false ] && [ "$DEPLOY_FRONTEND" = false ]; then
   exit 1
 fi
 
+# Region is shared by both modes; read it up front.
 echo "Reading terraform outputs..."
 cd "$TF_DIR"
-ECR_URL=$(terraform output -raw ecr_repository_url)
-CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)
-SERVICE_NAME=$(terraform output -raw ecs_service_name)
-S3_BUCKET=$(terraform output -raw s3_bucket_name)
-CF_DIST_ID=$(terraform output -raw cloudfront_distribution_id)
+REGION=$(terraform output -raw aws_region)
 cd "$PROJECT_DIR"
-
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 
 # --- Backend deployment ---
 if [ "$DEPLOY_BACKEND" = true ]; then
   echo ""
   echo "=== Deploying Backend ==="
+
+  cd "$TF_DIR"
+  ECR_URL=$(terraform output -raw ecr_repository_url)
+  CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)
+  SERVICE_NAME=$(terraform output -raw ecs_service_name)
+  cd "$PROJECT_DIR"
+
+  AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+  ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 
   echo "Logging in to ECR..."
   aws ecr get-login-password --region "$REGION" \
@@ -100,6 +102,11 @@ if [ "$DEPLOY_FRONTEND" = true ]; then
   echo ""
   echo "=== Deploying Frontend ==="
 
+  cd "$TF_DIR"
+  S3_BUCKET=$(terraform output -raw s3_bucket_name)
+  CF_DIST_ID=$(terraform output -raw cloudfront_distribution_id)
+  cd "$PROJECT_DIR"
+
   echo "Installing frontend dependencies..."
   cd "$PROJECT_DIR/frontend"
   yarn install --frozen-lockfile
@@ -107,9 +114,14 @@ if [ "$DEPLOY_FRONTEND" = true ]; then
   echo "Building frontend..."
   yarn build
 
-  echo "Syncing assets to S3 (long cache)..."
+  # Deploy in an order that never leaves the bucket in a broken state:
+  #   1. Upload new hashed assets alongside the old ones (no --delete yet).
+  #      The old index.html (still live) can still resolve its bundles.
+  #   2. Flip index.html + version.txt to the new build.
+  #   3. Invalidate CloudFront so the new index.html is served.
+  #   4. Only then prune stale objects with --delete.
+  echo "Uploading new assets (no delete yet)..."
   aws s3 sync dist/ "s3://$S3_BUCKET/" \
-    --delete \
     --region "$REGION" \
     --exclude "index.html" \
     --cache-control "max-age=31536000, immutable"
@@ -132,6 +144,14 @@ if [ "$DEPLOY_FRONTEND" = true ]; then
     --distribution-id "$CF_DIST_ID" \
     --paths "/index.html" "/version.txt" \
     --no-cli-pager
+
+  echo "Pruning stale assets from S3..."
+  aws s3 sync dist/ "s3://$S3_BUCKET/" \
+    --delete \
+    --region "$REGION" \
+    --exclude "index.html" \
+    --exclude "version.txt" \
+    --cache-control "max-age=31536000, immutable"
 
   cd "$PROJECT_DIR"
   echo "Frontend deployed."

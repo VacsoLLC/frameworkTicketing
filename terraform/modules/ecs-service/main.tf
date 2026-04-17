@@ -250,6 +250,11 @@ resource "aws_ecs_service" "app" {
     container_port   = var.container_port
   }
 
+  # Target group must be attached to the shared ALB (via the listener
+  # rule) before CreateService accepts it, otherwise first apply races
+  # with "target group does not have an associated load balancer".
+  depends_on = [aws_lb_listener_rule.app]
+
   tags = {
     Name        = "${var.project_name}-${var.environment}-service"
     Environment = var.environment

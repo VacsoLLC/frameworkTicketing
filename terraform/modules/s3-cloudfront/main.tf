@@ -64,6 +64,28 @@ resource "aws_s3_bucket_versioning" "frontend" {
   }
 }
 
+# Versioning is on, so every deploy's `s3 sync --delete` leaves noncurrent
+# versions behind. Expire them on a timer so the bucket doesn't grow
+# unboundedly, and reap incomplete multipart uploads from failed syncs.
+resource "aws_s3_bucket_lifecycle_configuration" "frontend" {
+  bucket = aws_s3_bucket.frontend.id
+
+  rule {
+    id     = "expire-noncurrent-versions"
+    status = "Enabled"
+
+    filter {}
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
 # ------------------------------------------------------------------------------
 # CloudFront Origin Access Control
 # ------------------------------------------------------------------------------
@@ -102,6 +124,31 @@ resource "aws_s3_bucket_policy" "frontend" {
       }
     ]
   })
+}
+
+# ------------------------------------------------------------------------------
+# CloudFront Function - SPA routing (default behavior only)
+# ------------------------------------------------------------------------------
+# Rewrites extensionless non-root URIs to /index.html so React Router
+# handles deep links. Runs only on the default (S3) behavior, NOT on
+# /api/*, so backend 404/403 responses pass through with their real
+# status codes instead of being masked as 200 + HTML.
+
+resource "aws_cloudfront_function" "spa_router" {
+  name    = "${var.project_name}-${var.environment}-spa-router"
+  runtime = "cloudfront-js-2.0"
+  publish = true
+  code    = <<-EOT
+    function handler(event) {
+      var request = event.request;
+      var uri = request.uri;
+      // Extensionless requests that aren't the root are SPA routes.
+      if (uri !== '/' && !uri.includes('.')) {
+        request.uri = '/index.html';
+      }
+      return request;
+    }
+  EOT
 }
 
 # ------------------------------------------------------------------------------
@@ -149,6 +196,13 @@ resource "aws_cloudfront_distribution" "frontend" {
       }
     }
 
+    # SPA router runs only on the default behavior so API traffic is
+    # unaffected.
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.spa_router.arn
+    }
+
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
@@ -178,18 +232,10 @@ resource "aws_cloudfront_distribution" "frontend" {
     compress               = true
   }
 
-  # SPA routing - return index.html for 404s
-  custom_error_response {
-    error_code         = 404
-    response_code      = 200
-    response_page_path = "/index.html"
-  }
-
-  custom_error_response {
-    error_code         = 403
-    response_code      = 200
-    response_page_path = "/index.html"
-  }
+  # SPA routing handled by the CloudFront Function above (scoped to the
+  # S3 behavior). Do NOT add distribution-level custom_error_response
+  # here: it would rewrite /api/* 404/403 responses as 200 + index.html
+  # and break every API client.
 
   restrictions {
     geo_restriction {

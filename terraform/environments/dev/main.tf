@@ -331,3 +331,8 @@ output "admin_password_command" {
   description = "Command to retrieve the generated admin password"
   value       = "aws secretsmanager get-secret-value --secret-id ${aws_secretsmanager_secret.app_secrets.name} --query SecretString --output text | jq -r '.ADMIN_PASSWORD'"
 }
+
+output "aws_region" {
+  description = "AWS region this stack is deployed in (read by scripts/deploy.sh)"
+  value       = var.aws_region
+}
