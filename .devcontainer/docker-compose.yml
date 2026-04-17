@@ -11,6 +11,7 @@ services:
       - ../../frameworkBackend:/workspaces/frameworkBackend:cached
       - ../../frameworkFrontend:/workspaces/frameworkFrontend:cached
       - ../../shared:/workspaces/shared:cached
+      - ../../casenet:/workspaces/casenet:cached
       - node-cache:/home/node/.cache
       - claude-config:/home/node/.claude
       - bn_modules:/workspaces/frameworkBackend/node_modules
